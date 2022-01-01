@@ -31,7 +31,23 @@ export class TransactionService {
     const newTransaction = new this.transactionModel(dto);
     return newTransaction.save();  
   }
-  
+
+
+  //method That gets the ngrok url given the authtoken
+    async createExternalUrl( authtoken:String , port:Number ){
+    const ngrok = require('ngrok');
+    return await ngrok.connect({
+      proto: 'tcp', // http|tcp|tls, defaults to http
+      addr: port, // port or network address, defaults to 80
+      authtoken: authtoken // other bank authtoken from ngrok.com
+    });
+  }
+
+
+  //method that creates the external transaction
+  createExternalTransaction(){
+
+  }
   
 
 }
