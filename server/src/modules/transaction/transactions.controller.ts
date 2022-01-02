@@ -29,9 +29,13 @@ getAll():any{
     return this.transactionService.getTrancation(accountId);
   }
 
+
+  //useGuard
   @Post('')
   CreateTransaction(@Body() dto:TransactionDto):any{
       const transaction = this.transactionService.createTransaction(dto);
       return transaction;
   }
+
+  
 }
