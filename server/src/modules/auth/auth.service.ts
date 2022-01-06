@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { AuthDto } from "./dtos/auth.dto";
 import { User, UserDocument } from "@sp/schemas";
-import { Model } from "mongoose";
+// import { Model } from "mongoose";
 import { UserService } from "../user/user.service";
 import { Response as Res } from "express";
 
