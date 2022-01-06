@@ -41,23 +41,6 @@ export class TransactionService {
   // }
 
 
-  //method that creates the external transaction
-  async createExternalTransaction(authtoken:String , port:Number , dto: TransactionDto ){
-    const ngrok = require('ngrok');
-    //authenticate the token
-    const url = await ngrok.connect({
-      proto: 'http', // http|tcp|tls, defaults to http
-      addr: port, // port or network address, defaults to 80
-      authtoken: authtoken // other bank authtoken from ngrok.com
-    });
-    // const api = ngrok.getApi();
-
-    // axois.post(`${url}/external/transfer` , dto)
-
-    // // api.post(`${url}/transactions` , dto); 
-    // api.post(`/transactions`, dto)
-    await ngrok.disconnect(url); // stops one
-  }
 
 
 }
