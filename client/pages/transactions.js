@@ -37,10 +37,11 @@ export default function Dashboard() {
 
   return (
     <div className={styles.border}>
-      
-      <Logout/>
-      <Button style={{justifyContent: 'right'}} color="primary" className="float-right" onClick={() => {
-        window.location.replace("http://localhost:3000"); }}> Back </Button> 
+
+      <Logout />
+      <Button style={{ justifyContent: 'right' }} color="primary" className="float-right" onClick={() => {
+        window.location.replace("http://localhost:3000");
+      }}> Back </Button>
       <br></br>
       <h2 >Account Balance: {balance}$</h2>
       <Form className={styles.form}>

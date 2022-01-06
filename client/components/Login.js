@@ -8,20 +8,20 @@ import {
 } from "reactstrap";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
-import {useMutateLoginUser} from '../adapters/user'
+import { useMutateLoginUser } from '../adapters/user'
 
 export default function Login() {
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailState, setEmailState] = useState("");
   const useLoginMutations = useMutateLoginUser();
 
-  
-/**
- * Checks if the email the user typed is valid or not.
- * @param {string} value -The giu email of the user
- */
+
+  /**
+   * Checks if the email the user typed is valid or not.
+   * @param {string} value -The giu email of the user
+   */
   const validateEmail = (value) => {
     const emailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -49,12 +49,12 @@ export default function Login() {
     // Call User Login Adapter
     event.preventDefault();
     useLoginMutations.mutate({
-      "email" : email,
-      "password" : password
+      "email": email,
+      "password": password
     });
-    
+
   };
-     return (
+  return (
     <div className={styles.App}>
       <h2>Sign In</h2>
       <Form className={styles.form} onSubmit={handleSubmit}>
@@ -88,7 +88,7 @@ export default function Login() {
         <Button color="primary" onClick={handleSubmit}>Submit</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <Button color="success" onClick={() => {window.location.replace("http://localhost:3000/register")} }>Sign Up</Button>
+        <Button color="success" onClick={() => { window.location.replace("http://localhost:3000/register") }}>Sign Up</Button>
       </Form>
     </div>
   );
