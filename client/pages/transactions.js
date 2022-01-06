@@ -37,41 +37,42 @@ export default function Dashboard() {
 
   return (
     <div className={styles.border}>
-      
-      <Logout/>
-      <Button style={{justifyContent: 'right'}} color="primary" className="float-right" onClick={() => {
-        window.location.replace("http://localhost:3000"); }}> Back </Button> 
+
+      <Logout />
+      <Button style={{ justifyContent: 'right' }} color="primary" className="float-right" onClick={() => {
+        window.location.replace("http://localhost:3000");
+      }}> Back </Button>
       <br></br>
       <h2 >Account Balance: {balance}$</h2>
       <Form className={styles.form}>
-      <FormGroup >
-      <Table striped bordered hover>
-        <thead className="thead-dark">
-          <tr align='center'>
-          <th scope="col">From/To</th>
-            <th scope="col">Date</th>
-            <th scope="col">Transaction name</th>
-            <th scope="col">Credit</th>
-            <th scope="col">Debit</th>
-            <th scope="col">Amount</th>
+        <FormGroup >
+          <Table striped bordered hover>
+            <thead className="thead-dark">
+              <tr align='center'>
+                <th scope="col">From/To</th>
+                <th scope="col">Date</th>
+                <th scope="col">Transaction name</th>
+                <th scope="col">Credit</th>
+                <th scope="col">Debit</th>
+                <th scope="col">Amount</th>
 
-          </tr>
-        </thead>
-        <tbody>
-          {" "}
-          {Transactions.map((Transaction, key) => (
-            <tr align='center'>
-              <td>{Transaction.from_To}</td>
-              <td>{Transaction.Display_date}</td>
-              <td>{Transaction.name}</td>
-              <td>{Transaction.credit ? Transaction.amount : "  "}</td>
-              <td>{Transaction.debit ? Transaction.amount : "   "}</td>
-              <td>{Transaction.amount}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      </FormGroup>
+              </tr>
+            </thead>
+            <tbody>
+              {" "}
+              {Transactions.map((Transaction, key) => (
+                <tr align='center'>
+                  <td>{Transaction.from_To}</td>
+                  <td>{Transaction.Display_date}</td>
+                  <td>{Transaction.name}</td>
+                  <td>{Transaction.credit ? Transaction.amount : "  "}</td>
+                  <td>{Transaction.debit ? Transaction.amount : "   "}</td>
+                  <td>{Transaction.amount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </FormGroup>
       </Form>
     </div>
   );

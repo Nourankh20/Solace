@@ -6,15 +6,17 @@ import {
   Label,
   FormFeedback,
 } from "reactstrap";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useMutateRegisterUser } from "../adapters/user";
-
+import React from "react";
 import axios from "axios";
 
 
 
 export default function Register() {
+
+
   //properties
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -37,49 +39,49 @@ export default function Register() {
 
 
   const useRegisterMutation = useMutateRegisterUser();
-  const defaultId="100";
-  const [useFetch,setUseFetch]=useState([]);
+  const defaultId = "100";
+  const [useFetch, setUseFetch] = useState([]);
 
 
-  if(userId.length==0||isNaN(Number(userId))){setUserId(defaultId)};
-  
-  
+  if (userId.length == 0 || isNaN(Number(userId))) { setUserId(defaultId) };
+
+
   useEffect(() => {
-    axios.get(`http://localhost:5000/user/list`).then((myUser)=>{
+    axios.get(`http://localhost:5000/user/list`).then((myUser) => {
       setUseFetch(myUser.data);
 
       //get all ids of users to prevent registering using the same id
-      var ids = useFetch.reduce((acc,user)=>{
+      var ids = useFetch.reduce((acc, user) => {
         acc.push(user.userId);
         return acc;
-      },[])
+      }, [])
 
       setIds(ids);
 
       //get all phone nos. of users to prevent registering using the same phone no.
-      var phones = useFetch.reduce((acc,user)=>{
+      var phones = useFetch.reduce((acc, user) => {
         acc.push(user.phone);
         return acc;
-      },[])
+      }, [])
 
       setUserPhones(phones);
-     
+
       //get all emails of users to prevent registering using the same email
-      var emails = useFetch.reduce((acc,user)=>{
+      var emails = useFetch.reduce((acc, user) => {
         acc.push(user.email);
         return acc;
-      },[]);
+      }, []);
 
       setEmails(emails);
-      
+
     })
-},[userId])
-  
-  
-/**
- * Checks if the first name the user typed is valid or not.
- * @param {string} value -The first name of the user trying to register.
- */
+  }, [userId])
+
+
+  /**
+   * Checks if the first name the user typed is valid or not.
+   * @param {string} value -The first name of the user trying to register.
+   */
 
   const validateFirstName = (value) => {
     let firstNameState;
@@ -117,10 +119,10 @@ export default function Register() {
   const validateUserId = (value) => {
     let userIdState;
     //checks if this id is already registerd or not.
-    var prevId=userIds.filter( id=> {return id === Number(value)});
+    var prevId = userIds.filter(id => { return id === Number(value) });
 
 
-    
+
     if (value.length == 7 && !isNaN(Number(value)) && prevId.length === 0) {
       userIdState = "has-success";
     }
@@ -138,32 +140,32 @@ export default function Register() {
 
   const validatePhone = (value) => {
     let phoneState;
-    if(value.length>=3){
-      const prefix = value.substring(0,3) ; 
-      if (value.length == 11 && !isNaN(Number(value)) && (prefix === "010" || prefix === "011" || prefix ===  "012" || prefix === "015") && !userPhones.find( phone=> phone===value)) {
+    if (value.length >= 3) {
+      const prefix = value.substring(0, 3);
+      if (value.length == 11 && !isNaN(Number(value)) && (prefix === "010" || prefix === "011" || prefix === "012" || prefix === "015") && !userPhones.find(phone => phone === value)) {
         phoneState = "has-success";
       }
       else {
         phoneState = "has-danger";
       }
     }
-    else{
+    else {
       phoneState = "has-danger";
     }
     setPhoneState(phoneState);
   }
 
-/**
- * Checks if the email the user typed is valid or not.
- * @param {string} value -The giu email of the user trying to register.
- */
+  /**
+   * Checks if the email the user typed is valid or not.
+   * @param {string} value -The giu email of the user trying to register.
+   */
   const validateEmail = (value) => {
     const emailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     let emailState;
-  //checks if this email is already registerd or not.
-    if (emailRegex.test(value) && !userEmails.find( email=> email===value)) {
+    //checks if this email is already registerd or not.
+    if (emailRegex.test(value) && !userEmails.find(email => email === value)) {
       emailState = "has-success";
     } else {
       emailState = "has-danger";
@@ -186,10 +188,10 @@ export default function Register() {
     setPasswordState(PasswordState);
   };
 
-   /**
- * Confirms the new password of the user.
- * @param {string} value -The confirmed new password of the user trying to register.
- */
+  /**
+* Confirms the new password of the user.
+* @param {string} value -The confirmed new password of the user trying to register.
+*/
 
   const validateConfirmPassword = (value) => {
     let confirmPasswordState;
@@ -205,12 +207,12 @@ export default function Register() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    
+
     if (name === "firstName") {
       validateFirstName(value);
       setFirstName(value);
     }
-    
+
     else if (name === "lastName") {
       validateLastName(value);
       setLastName(value);
@@ -220,13 +222,13 @@ export default function Register() {
       validateUserId(value);
       setUserId(value);
     }
-    
+
     else if (name === "email") {
       validateEmail(value);
       setEmail(value);
     }
-    
-    else if(name === "password") {
+
+    else if (name === "password") {
       validatePassword(value);
       setPassword(value);
     }
@@ -234,8 +236,8 @@ export default function Register() {
     else if (name === "confirm_password") {
       validateConfirmPassword(value);
       setConfirmPassword(value);
-      
-    } 
+
+    }
 
     else {
       validatePhone(value);
@@ -257,13 +259,13 @@ export default function Register() {
 
 
     if (
-      firstNameState==="has-success"&&
-      lastNameState==="has-success"&&
-      userIdState==="has-success"&&
+      firstNameState === "has-success" &&
+      lastNameState === "has-success" &&
+      userIdState === "has-success" &&
       emailState === "has-success" &&
       passwordState === "has-success" &&
-      confirmPasswordState === "has-success"&&
-      phoneState==="has-success"
+      confirmPasswordState === "has-success" &&
+      phoneState === "has-success"
     ) {
       // Call User Register Adapter
       useRegisterMutation.mutate(
@@ -281,15 +283,15 @@ export default function Register() {
 
   return (
     <div className={styles.App}>
-      <Button color="outline-primary"  onClick={() => {      
-             window.location.replace("http://localhost:3000");    
-       }} >Return to Sign in</Button>
+      <Button color="outline-primary" onClick={() => {
+        window.location.replace("http://localhost:3000");
+      }} >Return to Sign in</Button>
       <h2>Register</h2>
       <Form className={styles.form} onSubmit={handleSubmit}>
-      
-      <FormGroup>
+
+        <FormGroup>
           <Label className={styles.label} for="firstName">
-            First Name: 
+            First Name:
           </Label>
           <Input
             type="text"
@@ -302,11 +304,11 @@ export default function Register() {
           />
           <FormFeedback>Please don't leave it empty</FormFeedback>
         </FormGroup>
-        
+
 
         <FormGroup>
           <Label className={styles.label} for="lastName">
-            Last Name: 
+            Last Name:
           </Label>
           <Input
             type="text"
@@ -319,11 +321,11 @@ export default function Register() {
           />
           <FormFeedback>Please don't leave it empty</FormFeedback>
 
-          </FormGroup>
+        </FormGroup>
 
-          <FormGroup>
+        <FormGroup>
           <Label className={styles.label} for="userId">
-            GIU ID: 
+            GIU ID:
           </Label>
           <Input
             type="Number"
@@ -341,7 +343,7 @@ export default function Register() {
 
         <FormGroup>
           <Label className={styles.label} for="email">
-            Email: 
+            Email:
           </Label>
           <Input
             type="text"
@@ -369,10 +371,10 @@ export default function Register() {
             invalid={passwordState === "has-danger"}
           />
           <FormFeedback>
-            Password must be at least 6 characters long. 
+            Password must be at least 6 characters long.
           </FormFeedback>
         </FormGroup>
-        
+
         <FormGroup>
           <Label className={styles.label} for="password">
             Confirm Password:
@@ -386,26 +388,26 @@ export default function Register() {
             valid={confirmPasswordState === "has-success"}
             invalid={confirmPasswordState === "has-danger"}
           />
-           <FormFeedback>
+          <FormFeedback>
             Please make sure it's matching the password above.
           </FormFeedback>
         </FormGroup>
 
         <FormGroup>
           <Label className={styles.label} for="phone">
-            Phone Number: 
+            Phone Number:
           </Label>
           <Input
-            pattern =  "/^-?(|[0-9]\d*)?$/"
+            pattern="/^-?(|[0-9]\d*)?$/"
             type="number"
             name="phone"
             id="phone"
-            placeholder = "Enter Phone Number"
+            placeholder="Enter Phone Number"
             onChange={handleChange}
             valid={phoneState === "has-success"}
             invalid={phoneState === "has-danger"}
           />
-           <FormFeedback>
+          <FormFeedback>
             Enter a valid phone no. or this phone has been used before.
           </FormFeedback>
         </FormGroup>
