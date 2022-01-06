@@ -9,12 +9,10 @@ export class TransactionDto{
   Display_date: string;
 
   @IsNotEmpty()
-  name: string;
+  description: string;
 
-  
   debit: number;
 
- 
   credit: number;
 
   @IsNotEmpty()
