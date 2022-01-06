@@ -32,13 +32,14 @@ export class AccountService {
     return await this.accountModel.find({ userid: uid }).exec();
   }
 
+  
   /**
    * Creates an account in the mongo database using userid with added random numbers before and 
    * after it to reduce the possiblity of duplicate values of accountid
    * @param userid for the account to be created with
    * @return the created account
    */
-
+  
   createAccount(userid: string): Promise<Account> {
     const newId = (Math.floor(Math.random() * 50) + 1).toString();
     const newId2 = (Math.floor(Math.random() * 17) + 1).toString();
@@ -49,7 +50,7 @@ export class AccountService {
     });
     return createdAccount.save();
   }
-
+  
   /**
    * It calculates the balance of user by adding credit and subtracting debit
    * where credit and debit are numbers that are considered boolean (1 is true and 0 is false)
@@ -68,4 +69,17 @@ export class AccountService {
     }, 0);
     return total;
   }
+
+  /**
+   * It looks for an account by providing accountid 
+   * @param {accountid} aid the accountid of the account we are trying to find
+   * @returns {Account|null} the account that has accountid=aid or null if no such thing exists
+   */
+
+  async findAccountbyAccountId(aid:string) :Promise<any>
+  {
+    return await this.accountModel.findOne({ accountid: aid }).exec();
+  }
+
+
 }
