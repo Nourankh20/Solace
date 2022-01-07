@@ -1,16 +1,16 @@
-// import { Controller, Get, Param, Post,} from "@nestjs/common";
-// // import { ExternalService } from "./external.service";
+import { Controller, Get, Req, Post, Body, Res} from "@nestjs/common";
+import { ExternalService } from "./external.service";
 
+import { Request , Response } from 'express';
 
-// @Controller("external")
-// export class ExternalController {
-//   constructor(private externalService: ExternalService) {}
+@Controller("external")
+export class ExternalController {
+  constructor(private externalService: ExternalService) {}
  
 
-//   @Post("/transfer")
-//   CreateAccount(@Body body:): any {
-//     const account = this.accountService.createAccount(userid);
-//     return account;
-//   }
+  @Post("/transfer")
+   CreateTransfer(@Req() req:Request , @Res() res:Response): any {
+    return res.send(this.externalService.createTransfer(req, res));
+  }
 
-// }
+}

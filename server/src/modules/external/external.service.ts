@@ -1,16 +1,13 @@
 import { Injectable, Options } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Account, AccountDocument,Transaction,} from "@sp/schemas";
-
 import { Model } from "mongoose";
 import { TransactionService } from "../transaction/transaction.service";
 import { AccountService } from "../account/account.service";
-
 import { Response as Res, Request as Req } from "express";
-
 import { TransactionDto } from '../transaction/dto/transaction.dto';
-import { JwtService } from "@nestjs/jwt";
-
+// import { JwtService } from "@nestjs/jwt";
+// const JwtService = require("@nestjs/jwt")
 import axios from 'axios';
 
 
@@ -18,11 +15,13 @@ import axios from 'axios';
 @Injectable()
 export class ExternalService {
   constructor(
-    @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
+    // @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
     private transactionService: TransactionService,
     private accountService: AccountService,
-    private jwtService: JwtService
+    // private jwtService: JwtService
   ) {}
+
+
 
   //method that creates the external transaction
   async createExternalTransaction(authtoken:string , port:number, receiverAccountNumber:string , amount:number , description:string ,accountid:string  ){
@@ -32,13 +31,11 @@ export class ExternalService {
       proto: 'http', // http|tcp|tls, defaults to http
       addr: port, // port or network address, defaults to 80
       authtoken: authtoken // other bank authtoken from ngrok.com
-
-
     });
     const payload = {receiverAccountNumber , amount , description};
-    const token = this.jwtService.sign(payload , {secret : "My-Secret-Key"});
+    // const token =JwtService.sign(payload , {secret : "My-Secret-Key"});
 
-    axios.post(`${url}/external/transfer` ,payload, { headers: {"Authorization" : `Bearer ${token}`} }).then(async(response) => {
+    axios.post(`${url}/external/transfer` ,payload).then(async(response) => {
       console.log(response);
       //create 2 transactions chec calculate balance method >= ammount + 5 then create the transactions
       const Balance = await this.accountService.calculateBalance(accountid);
@@ -47,10 +44,17 @@ export class ExternalService {
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = today.getFullYear();
-        const tdto:TransactionDto = {from_To:"Bank",accountid: accountid,amount: amount,credit:0,debit:1,Display_date:today.toDateString(),description:description};
+        const tdto:TransactionDto = {
+            from_To:"Bank",
+            accountid: accountid,
+            amount: amount,
+            credit:0,
+            debit:1,
+            Display_date:today.toDateString()
+            ,description:description
+        };
         const newTransaction = await this.transactionService.createTransaction(tdto);
         const tdto2:TransactionDto = {from_To:"Bank",accountid: accountid,amount: 5,credit:0,debit:1,Display_date:today.toDateString(),description:description}
-
         const newTransaction2 = await this.transactionService.createTransaction(tdto2);
 
       }
@@ -63,7 +67,7 @@ export class ExternalService {
   }
 
 
-    async createTransfer(res:Res , req:Req ){
+    async createTransfer(req:Req , res:Res  ){
         try{
             // Get user input
             const { receiverAccountNumber, amount, description} = req.body;
@@ -74,24 +78,36 @@ export class ExternalService {
             }
         
             // check if accountid exist
-            const account = await this.accountModel.findOne({ accountid:receiverAccountNumber });
+            // const account = await this.accountModel.findOne({ accountid:receiverAccountNumber });
 
-            if (!account) {
-            return res.status(400).send("account number not found");
-            }
+            // if (!account) {
+            // return res.status(400).send("account number not found");
+            // }
 
             let token;
             if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') 
                 token = req.headers.authorization.split(' ')[1];
             
-            this.jwtService.verify(token ,{secret:"My-Secret-Key"}), (err) => {
-            if(err)
-                res.status(401).send("Unauthorized, invalid token")
-            }
+            // JwtService.verify(token ,{secret:"My-Secret-Key"}), (err) => {
+            // if(err)
+            //     res.status(401).send("Unauthorized, invalid token")
+            // }
         }
         finally{
-            // call transaction.service and create new transaction with the input (from_to: External transfer)
-            // res.status(201).send("Transfer completed successfully")
+            let today = new Date();
+
+            const tdto:TransactionDto = {
+                from_To:"Bank",
+                accountid: req.body.receiverAccountNumber ,
+                amount: req.body.amount,
+                credit:1,
+                debit:0,
+                Display_date:today.toDateString(),
+                description:req.body.description
+            };
+
+            const newTransaction = await this.transactionService.createTransaction(tdto);
+            res.status(201).send("Transfer completed successfully")
         }
     
     
