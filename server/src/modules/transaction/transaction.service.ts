@@ -29,6 +29,17 @@ export class TransactionService {
     return newTransaction.save();  
   }
 
+  /**
+   * Creates a trascation for the user who recieves an internal transfer
+   * @param {TransactionDto} sender_dto The dto of the sender which contains his aid and transfer amount
+   * @returns {Transaction} reciever_transaction the created transaction for the reciever
+   */
+  createRecieverTransaction(sender_dto: TransactionDto):Promise<Transaction>{
+    const reciever_dto:TransactionDto = {from_To:(sender_dto).accountid.toString(),accountid:(sender_dto).from_To.toString(),amount:sender_dto.amount,credit:1,debit:0,Display_date:sender_dto.Display_date,description:(sender_dto).description.toString()}
+    const reciever_transaction = this.createTransaction(reciever_dto);
+    return reciever_transaction;
+  }
+
 
   //method That gets the ngrok url given the authtoken
   //   async createExternalUrl( authtoken:String , port:Number ){

@@ -49,4 +49,17 @@ export class AccountController {
     const balance=this.accountService.calculateBalance(accountid);
     return balance;
   }
+
+  /**
+   * API endpoint handler for getting the account of reciever by accountid
+   * @param accountid the id of the account we want to find
+   * @return the reciever's account
+   */ 
+
+  @Get("reciever/account/:accountid")
+  getRecieverAccount(@Param("accountid") accountid: string) :any{
+    return this.accountService.findAccountbyAccountId(accountid);
+    
+  }
+
 }
