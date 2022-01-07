@@ -26,7 +26,8 @@ export class TransactionService {
   
   createTransaction(dto: TransactionDto):Promise<Transaction>{     
     const newTransaction = new this.transactionModel(dto);
-    return newTransaction.save();  
+    //console.log(newTransaction)
+    return newTransaction.save();
   }
 
   /**
@@ -50,8 +51,6 @@ export class TransactionService {
   //       authtoken: authtoken // other bank authtoken from ngrok.com
   //     });
   // }
-
-
 
 
 }
