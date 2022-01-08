@@ -15,7 +15,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 @Module({
   imports: [
       TransactionModule,
-      AccountsModule ,
       PassportModule,
       JwtModule.register({
         secret:"My-Secret-Key",

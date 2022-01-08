@@ -24,46 +24,46 @@ export class ExternalService {
 
 
 
-//   //method that creates the external transaction
-//   async createExternalTransaction(authtoken:string , port:number, receiverAccountNumber:string , amount:number , description:string ,accountid:string  ){
-//     const ngrok = require('ngrok');
-//     //authenticate the token
-//     const url = await ngrok.connect({
-//       proto: 'http', // http|tcp|tls, defaults to http
-//       addr: port, // port or network address, defaults to 80
-//       authtoken: authtoken // other bank authtoken from ngrok.com
-//     });
-//     const payload = {receiverAccountNumber , amount , description};
-//     // const token =JwtService.sign(payload , {secret : "My-Secret-Key"});
+  //method that creates the external transaction
+  async createExternalTransaction(authtoken:string , port:number, receiverAccountNumber:string , amount:number , description:string ,accountid:string  ){
+    const ngrok = require('ngrok');
+    //authenticate the token
+    const url = await ngrok.connect({
+      proto: 'http', // http|tcp|tls, defaults to http
+      addr: port, // port or network address, defaults to 80
+      authtoken: authtoken // other bank authtoken from ngrok.com
+    });
+    const payload = {receiverAccountNumber , amount , description};
+    // const token =JwtService.sign(payload , {secret : "My-Secret-Key"});
 
-//     axios.post(`${url}/external/transfer` ,payload).then(async(response) => {
-//       console.log(response);
-//       //create 2 transactions chec calculate balance method >= ammount + 5 then create the transactions
-//       const Balance = await this.accountService.calculateBalance(accountid);
-//       if(Balance >= amount+5){
-//         let today = new Date();
-//         const tdto:TransactionDto = {
-//             from_To:"Bank",
-//             accountid: accountid,
-//             amount: amount,
-//             credit:0,
-//             debit:1,
-//             Display_date:today.toDateString()
-//             ,description:description
-//         };
-//         const newTransaction = await this.transactionService.createTransaction(tdto);
-//         const tdto2:TransactionDto = {
-//             from_To:"Bank",accountid: accountid,amount: 5,credit:0,debit:1,Display_date:today.toDateString(),description:description}
-//         const newTransaction2 = await this.transactionService.createTransaction(tdto2);
+    axios.post(`${url}/external/transfer` ,payload).then(async(response) => {
+      console.log(response);
+      //create 2 transactions chec calculate balance method >= ammount + 5 then create the transactions
+      const Balance = await this.accountService.calculateBalance(accountid);
+      if(Balance >= amount+5){
+        let today = new Date();
+        const tdto:TransactionDto = {
+            from_To:"Bank",
+            accountid: accountid,
+            amount: amount,
+            credit:0,
+            debit:1,
+            Display_date:today.toDateString()
+            ,description:description
+        };
+        const newTransaction = await this.transactionService.createTransaction(tdto);
+        const tdto2:TransactionDto = {
+            from_To:"Bank",accountid: accountid,amount: 5,credit:0,debit:1,Display_date:today.toDateString(),description:description}
+        const newTransaction2 = await this.transactionService.createTransaction(tdto2);
 
-//       }
-//     }, (error) => {
-//       console.log(error);
-//     }) ;
+      }
+    }, (error) => {
+      console.log(error);
+    }) ;
     
 
-//     await ngrok.disconnect(url); // stops one
-//   }
+    await ngrok.disconnect(url); // stops one
+  }
 
 
     async createTransfer(dto: ExternalDto ){

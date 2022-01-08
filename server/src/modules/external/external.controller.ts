@@ -10,19 +10,17 @@ import { ConstraintMetadata } from "class-validator/types/metadata/ConstraintMet
 export class ExternalController {
   constructor(
       private externalService: ExternalService,
-      private accountService: AccountService,
-
-
+     
     ) {}
  
   @UseGuards(AuthGuard('jwt'))
   @Post("/transfer")
     CreateTransfer(@Body()dto:ExternalDto):any {
-        try{
+     try{
             return this.externalService.createTransfer(dto);
         } catch{
             (err) => console.log(err.message);
         }
-}
+    }
 
 }
