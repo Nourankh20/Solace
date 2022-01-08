@@ -70,21 +70,33 @@ export class ExternalService {
         // check if accountid exist
         return this.accountService.findAccountbyAccountId((dto).receiverAccountNumber.toString())
         .then( async (account) => { 
+                    //if account exists resume else return error 400 "Bad_Request" with message of "account number not found"
                     if (account){
-                    let today = new Date();
-                    const tdto:TransactionDto = {
-                        from_To:"External Bank",
-                        accountid: dto.receiverAccountNumber.toString() ,
-                        amount: dto.amount.valueOf(),
-                        credit:1,
-                        debit:0,
-                        Display_date:today.toDateString(),
-                        description:dto.description.toString()
+                        //checks if the amount is less than or equal 50 if yes resume and create a transaction else 400 "Bad_Request" with message of "amount exceeds 50"
+                        if (dto.amount <= 50){
+                            let today = new Date();
+                            const tdto:TransactionDto = {
+                                from_To:"External Bank",
+                                accountid: dto.receiverAccountNumber.toString() ,
+                                amount: dto.amount.valueOf(),
+                                credit:1,
+                                debit:0,
+                                Display_date:today.toDateString(),
+                                description:dto.description.toString()
+                            }
+                        return  await this.transactionService.createTransaction(tdto);
+                        }
+                   
+                        else 
+                            throw new HttpException('amount exceeds 50', HttpStatus.BAD_REQUEST);
                     }
-                    return  await this.transactionService.createTransaction(tdto);
-                }
-               throw new HttpException('account number not found"', HttpStatus.BAD_REQUEST);}
-        );
+                    throw new HttpException('account number not found', HttpStatus.BAD_REQUEST);}
+
+                     
+                    
+                
+        );  
+     }
         
      
 
@@ -92,4 +104,4 @@ export class ExternalService {
 
  }
   
-}
+
