@@ -8,13 +8,22 @@ import { AccountsModule } from '../account/account.module';
 import {TransactionModule} from '../transaction/transaction.module';
 import { ExternalController } from './external.controller';
 import { ExternalService } from './external.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 
 @Module({
-  imports: [TransactionModule , AccountsModule],
-  exports: [ExternalService ],
+  imports: [
+      TransactionModule,
+      AccountsModule ,
+      PassportModule,
+      JwtModule.register({
+        secret:"My-Secret-Key",
+        signOptions: { expiresIn: '60s' },
+      }),],
+ 
   controllers: [ExternalController],
-  providers: [ExternalService],
+  providers: [ExternalService , JwtStrategy],
 })
 export class ExternalModule {}
 
