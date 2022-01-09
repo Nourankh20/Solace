@@ -12,13 +12,18 @@ import Navbar  from './Navbar';
 
 
 
+
 export default function Dashboard() {
   const [accounts, viewAccounts] = useState([]);
 
   useEffect(async () => {
+    /*const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` }
+  };*/
     console.log("Mounting!");
     const user = JSON.parse(localStorage.getItem("user")).userId;
-    const response = await apiService.get(`http://localhost:5000/accounts/${user}`)
+    
+    const response = await apiService.get(`http://localhost:5000/accounts/${user}`/*,config*/)
     viewAccounts(response.data)
   }, []);
 

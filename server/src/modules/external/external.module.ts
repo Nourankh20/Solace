@@ -19,7 +19,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       JwtModule.register({
         secret:"My-Secret-Key",
         signOptions: { expiresIn: '60s' },
-      }),],
+      }),AccountsModule],
  
   controllers: [ExternalController],
   providers: [ExternalService , JwtStrategy],

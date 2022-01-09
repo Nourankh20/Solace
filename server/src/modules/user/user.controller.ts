@@ -10,7 +10,7 @@ export class UserController {
   /**
    * API endpoint handler returns the authenticated user from JWT payload
    */
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   @Get()
   user(@Request() req: any): any {
     return req.user;
@@ -19,6 +19,7 @@ export class UserController {
   /**
    * API endpoint handler returns all users from mongo database
    */
+  
   @Get('list')
   users(): any {
     return this.userService.findAll();
@@ -29,6 +30,7 @@ export class UserController {
    * @param {UserDto} dto checks that the user filled the register 
    * @return created user
    */ 
+  
   @Post('/register')
   register(@Body() dto:UserDto):any{
     console.log('Entered post');
@@ -41,6 +43,7 @@ export class UserController {
    * @param userId the id of the user to check
    * @return user object
    */ 
+  
   @Get(':userId')
   exists(@Param('userId') userId: string):any{
     return this.userService.findUserbyId(userId);
