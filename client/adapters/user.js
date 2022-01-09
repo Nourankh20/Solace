@@ -58,7 +58,7 @@ export function useMutateRegisterUser() {
       },
       onError: (e) => console.log(e.message),
     });
-    
+  } 
     export function useMutateExternaltransfer() {
       return useMutation(transfer => {
       const data = new FormData();
@@ -74,4 +74,4 @@ export function useMutateRegisterUser() {
     });
   
 }
-}
+
