@@ -5,11 +5,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { ExternalDto } from "./dtos/external.dto";
 import { AccountService } from "../account/account.service";
 import { ConstraintMetadata } from "class-validator/types/metadata/ConstraintMetadata";
+import { TransactionDto } from "../transaction/dto/transaction.dto";
+import { response } from "express";
 
 @Controller("external")
 export class ExternalController {
   constructor(
       private externalService: ExternalService,
+      private accountService: AccountService
      
     ) {}
  
@@ -23,4 +26,9 @@ export class ExternalController {
         }
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Post("/CreateTransfer")
+      CreateExternal(@Body()request:any):any {
+    }
 }
+
