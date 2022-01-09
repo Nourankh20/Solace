@@ -6,10 +6,6 @@ import { useMutateExternalTransfer } from "../adapters/user";
 
 
 export default function ExternalTransfer() {
-  const [AccountID, setAccountID] = useState("");
-  const [Amount, setAmount] = useState("");
-  const [Bank, setBank] = useState("");
-  const [Description, setDescription] = useState("");
 
     const [AccountID, setAccountID] = useState("");
     const [Amount, setAmount] = useState("");
@@ -38,55 +34,6 @@ export default function ExternalTransfer() {
         }
         setAccountIDState(accountIDState);
     }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    validateAccountID(value);
-    validateAmount(value);
-    validateDescription(value);
-
-    if (
-      accountIDState === "has-success" &&
-      amountState === "has-success" &&
-      descriptionState === "has-success"
-    ) {
-    }
-  };
-
-  return (
-    <div className={styles.app}>
-      <h1> External Funds Transfer </h1>
-
-      <Button
-        class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000");
-        }}
-      >
-        Return to Sign in
-      </Button>
-      <br></br>
-      <br></br>
-      <Button class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/");
-        }}
-      >
-        Return to Dashboard
-      </Button>
-      <br></br>
-      <br></br>
-      <Button
-        class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/internal_transfer");
-        }}
-      >
-        Go to internal transfer
-      </Button>
-
     /**
      * Checks if the Amount entered by the user is not more than 50 as the maximum transaction allowed is 50.
      * @param {string} value -The amount of money the user wants to transfer.
@@ -141,7 +88,7 @@ export default function ExternalTransfer() {
             setBank(value)
         }
 
-      };
+      }
 
 
       const handleSubmit = (event) => {
@@ -171,8 +118,40 @@ export default function ExternalTransfer() {
       };
 
 
-    return (
-      <div className = {styles.app}>
+    return ( 
+    <div className = {styles.app}>
+      <div className={styles.app}>
+      <h1> External Funds Transfer </h1>
+
+      <Button
+        class="btn btn-info"
+        onClick={() => {
+          window.location.replace("http://localhost:3000");
+        }}
+      >
+        Return to Sign in
+      </Button>
+      <br></br>
+      <br></br>
+      <Button class="btn btn-info"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/");
+        }}
+      >
+        Return to Dashboard
+      </Button>
+      <br></br>
+      <br></br>
+      <Button
+        class="btn btn-info"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/internal_transfer");
+        }}
+      >
+        Go to internal transfer
+      </Button>
+
+     
          <h1> External Funds Transfer  </h1>
       <Form className={styles.form} onSubmit={handleSubmit}>
         <FormGroup>
@@ -219,5 +198,7 @@ export default function ExternalTransfer() {
         <Button>Submit</Button>
       </Form>
     </div>
+    </div>
   );
-}
+      
+  };
