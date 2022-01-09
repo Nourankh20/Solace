@@ -21,6 +21,7 @@ export default function InternalTransfer() {
     const [recieverAccountid, setrecieverAccountid] = useState("");
     const [amount, setAmount] = useState("");
     const [description, setDescription] = useState("");
+    const [account, setAccount] = useState("");
 
     //states
     const [recieverAccountidState, setrecieverAccountidState] = useState("");
@@ -29,28 +30,25 @@ export default function InternalTransfer() {
 
     const useTransferMutation = useMutateTransferUser();
     const defaultrecieverAccountid = 12345678910;
-    
-  
-    if (recieverAccountid.length == 0 || isNaN(Number(recieverAccountid))) { setrecieverAccountid(defaultrecieverAccountid) };
-    useEffect(() => {
-        axios.get(`http://localhost:5000/reciever/account/${recieverAccountid}`).then((recieverAccount) => {
-            setrecieverAccountid(recieverAccount.data);
-        })
-    }, [recieverAccountid])
+
+
 
     const validateAccountId = (value) => {
-        /*Call a get request to check account is valid*/
+        //Call a get request to check account is valid
 
         let recieverAccountidState;
-        if (value == true) {
+
+        const account = await axios.get(`http://localhost:5000/reciever/account/${value}`);
+        if (account && account.toString().length == 12) {
             recieverAccountidState = "has-success";
+            setAccount(account.data);
         }
         else {
             recieverAccountidState = "has-danger";
         }
         setrecieverAccountidState(recieverAccountidState);
     }
-    /*
+
     const validateDescriptionState = (value) => {
         let descriptionState;
         if (value == true) {
@@ -61,11 +59,12 @@ export default function InternalTransfer() {
         }
         setDescriptionState(descriptionState);
     }
-    */
+
     /* if isNan() to  check its a number */
     const validateAmountState = (value) => {
         let amountState;
-        if (!value.isNan(value)) {
+        const balance = await apiService.get(`http://localhost:5000/accounts/user/balance/${account.data.id}`);
+        if (!value.isNan(value) && value <= balance) {
             amountState = "has-success";
         }
         else {
@@ -87,11 +86,11 @@ export default function InternalTransfer() {
             setAmountState(value);
         }
 
-        // else if (name === "description") {
-        //     validateDescriptionState(value);
-        //     setDescriptionState(value);
+        else if (name === "description") {
+            validateDescriptionState(value);
+            setDescriptionState(value);
 
-        // }
+        }
 
 
 
@@ -103,7 +102,7 @@ export default function InternalTransfer() {
         event.preventDefault();
         validateAccountId();
         validateAmountState();
-        // validateDescriptionState();
+         validateDescriptionState();
 
         if (
             accountIdState === "has-success" &&
@@ -117,7 +116,7 @@ export default function InternalTransfer() {
                     "description": "internal transfer",
                     "debit": 1,
                     "credit": 0,
-                    "amount": Number (amount),
+                    "amount": Number(amount),
                     "accountid": window.localStorage.getItem("accountid")
                 }
             );
