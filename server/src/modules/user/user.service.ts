@@ -61,10 +61,22 @@ export class UserService {
    * @param userId the id of the user to find
    * @return user object
    */
-  async findUserbyId(userId:string):Promise <any>{
+  async findUserbyId(Id:string):Promise <any>{
 
-    return await this.userModel.findOne({ userId:Number(userId)}).exec();
+    return await this.userModel.findOne({ userId:Number(Id)}).exec();
 
   }
+
+  /**
+   * Gets user by email from the mongo database  
+   * @param userEmail the email of the user to find
+   * @return user object
+   */
+  async findUserbyEmail(userEmail:string):Promise <any>{
+
+    return await this.userModel.findOne({ email:userEmail}).exec();
+
+  }
+
 
 }
