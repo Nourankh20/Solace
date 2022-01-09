@@ -96,25 +96,26 @@ export default function ExternalTransfer() {
       <h1> External Funds Transfer </h1>
 
       <Button
-        color="outline-primary"
+        class="btn btn-info"
         onClick={() => {
           window.location.replace("http://localhost:3000");
         }}
       >
         Return to Sign in
       </Button>
-
-      <Button
-        color="outline-primary"
+      <br></br>
+      <br></br>
+      <Button class="btn btn-info"
         onClick={() => {
           window.location.replace("http://localhost:3000/");
         }}
       >
         Return to Dashboard
       </Button>
-
+      <br></br>
+      <br></br>
       <Button
-        color="outline-primary"
+        class="btn btn-info"
         onClick={() => {
           window.location.replace("http://localhost:3000/internal_transfer");
         }}

@@ -32,7 +32,7 @@ export default function InternalTransfer() {
 
     let recieverAccountidState;
 
-    const account = await axios.get(
+    const account =  axios.get(
       `http://localhost:5000/reciever/account/${value}`
     );
     if (account && account.toString().length == 12) {
@@ -57,7 +57,7 @@ export default function InternalTransfer() {
   /* if isNan() to  check its a number */
   const validateAmountState = (value) => {
     let amountState;
-    const balance = await apiService.get(
+    const balance =  apiService.get(
       `http://localhost:5000/accounts/user/balance/${account.data.id}`
     );
     if (!value.isNan(value) && value <= balance) {
@@ -105,8 +105,7 @@ export default function InternalTransfer() {
 
   return (
     <div className={styles.App}>
-      <Button
-        color="outline-primary"
+      <Button class="btn btn-info"
         onClick={() => {
           window.location.replace("http://localhost:3000/");
         }}
@@ -114,13 +113,12 @@ export default function InternalTransfer() {
         Return to Dashboard
       </Button>
 
-      <Button
-        color="outline-primary"
+      <Button class="btn btn-info"
         onClick={() => {
-          window.location.replace("http://localhost:3000/external_transfer");
+          window.location.replace("http://localhost:3000/internal_transfer");
         }}
       >
-        Go to external transfer
+        Go to internal transfer
       </Button>
 
       <Button

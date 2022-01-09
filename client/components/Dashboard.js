@@ -8,7 +8,7 @@ import {
   Button
 } from "reactstrap";
 import styles from "../styles/Home.module.css";
-import Navbar  from './Navbar';
+import Navbar from './Navbar';
 
 
 
@@ -22,7 +22,7 @@ export default function Dashboard() {
   };*/
     console.log("Mounting!");
     const user = JSON.parse(localStorage.getItem("user")).userId;
-    
+
     const response = await apiService.get(`http://localhost:5000/accounts/${user}`/*,config*/)
     viewAccounts(response.data)
   }, []);
@@ -30,6 +30,23 @@ export default function Dashboard() {
 
   return (
     <div className={styles.border}>
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/external_transfer");
+        }}
+      >
+        Go to external transfer
+      </Button>
+      <br></br>
+      <br></br>
+      <Button variant="info"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/internal_transfer");
+        }}
+      >
+        Go to internal transfer
+      </Button>
       <Logout />
       <h1 >Accounts</h1>
       <Form className={styles.form}>
