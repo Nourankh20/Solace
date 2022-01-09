@@ -12,11 +12,7 @@ import { useMutateRegisterUser } from "../adapters/user";
 import React from "react";
 import axios from "axios";
 
-
-
 export default function Register() {
-
-
   //properties
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -37,14 +33,13 @@ export default function Register() {
   const [userEmails, setEmails] = useState([]);
   const [userPhones, setUserPhones] = useState([]);
 
-
   const useRegisterMutation = useMutateRegisterUser();
   const defaultId = "100";
   const [useFetch, setUseFetch] = useState([]);
 
-
-  if (userId.length == 0 || isNaN(Number(userId))) { setUserId(defaultId) };
-
+  if (userId.length == 0 || isNaN(Number(userId))) {
+    setUserId(defaultId);
+  }
 
   useEffect(() => {
     axios.get(`http://localhost:5000/user/list`).then((myUser) => {
@@ -54,7 +49,7 @@ export default function Register() {
       var ids = useFetch.reduce((acc, user) => {
         acc.push(user.userId);
         return acc;
-      }, [])
+      }, []);
 
       setIds(ids);
 
@@ -62,7 +57,7 @@ export default function Register() {
       var phones = useFetch.reduce((acc, user) => {
         acc.push(user.phone);
         return acc;
-      }, [])
+      }, []);
 
       setUserPhones(phones);
 
@@ -73,10 +68,8 @@ export default function Register() {
       }, []);
 
       setEmails(emails);
-
-    })
-  }, [userId])
-
+    });
+  }, [userId]);
 
   /**
    * Checks if the first name the user typed is valid or not.
@@ -87,73 +80,76 @@ export default function Register() {
     let firstNameState;
     if (value.length > 2) {
       firstNameState = "has-success";
-    }
-    else {
+    } else {
       firstNameState = "has-danger";
     }
     setFirstNameState(firstNameState);
-  }
+  };
 
   /**
- * Checks if the last name the user typed is valid or not.
- * @param {string} value -The last name of the user trying to register.
- */
+   * Checks if the last name the user typed is valid or not.
+   * @param {string} value -The last name of the user trying to register.
+   */
 
   const validateLastName = (value) => {
     let lastNameState;
     if (value.length > 2) {
       lastNameState = "has-success";
-    }
-    else {
+    } else {
       lastNameState = "has-danger";
     }
     setLastNameState(lastNameState);
-  }
+  };
 
   /**
- * Checks if the GIU ID the user typed is valid or not.
- * The ID must contain 7 numbers.
- * @param {string} value -The GIU ID of the user trying to register.
- */
+   * Checks if the GIU ID the user typed is valid or not.
+   * The ID must contain 7 numbers.
+   * @param {string} value -The GIU ID of the user trying to register.
+   */
 
   const validateUserId = (value) => {
     let userIdState;
     //checks if this id is already registerd or not.
-    var prevId = userIds.filter(id => { return id === Number(value) });
-
-
+    var prevId = userIds.filter((id) => {
+      return id === Number(value);
+    });
 
     if (value.length == 7 && !isNaN(Number(value)) && prevId.length === 0) {
       userIdState = "has-success";
-    }
-    else {
+    } else {
       userIdState = "has-danger";
     }
     setUserIdState(userIdState);
-  }
+  };
 
   /**
- * Checks if the Phone no. the user typed is valid or not.
- * The Phone no. must be a valid Egyptain one.
- * @param {string} value -The phone no. of the user trying to register.
- */
+   * Checks if the Phone no. the user typed is valid or not.
+   * The Phone no. must be a valid Egyptain one.
+   * @param {string} value -The phone no. of the user trying to register.
+   */
 
   const validatePhone = (value) => {
     let phoneState;
     if (value.length >= 3) {
       const prefix = value.substring(0, 3);
-      if (value.length == 11 && !isNaN(Number(value)) && (prefix === "010" || prefix === "011" || prefix === "012" || prefix === "015") && !userPhones.find(phone => phone === value)) {
+      if (
+        value.length == 11 &&
+        !isNaN(Number(value)) &&
+        (prefix === "010" ||
+          prefix === "011" ||
+          prefix === "012" ||
+          prefix === "015") &&
+        !userPhones.find((phone) => phone === value)
+      ) {
         phoneState = "has-success";
-      }
-      else {
+      } else {
         phoneState = "has-danger";
       }
-    }
-    else {
+    } else {
       phoneState = "has-danger";
     }
     setPhoneState(phoneState);
-  }
+  };
 
   /**
    * Checks if the email the user typed is valid or not.
@@ -165,7 +161,10 @@ export default function Register() {
 
     let emailState;
     //checks if this email is already registerd or not.
-    if (emailRegex.test(value) && !userEmails.find(email => email === value)) {
+    if (
+      emailRegex.test(value) &&
+      !userEmails.find((email) => email === value)
+    ) {
       emailState = "has-success";
     } else {
       emailState = "has-danger";
@@ -174,10 +173,10 @@ export default function Register() {
   };
 
   /**
- * Checks if the password the user typed is valid or not.
- * The password must be 6 characters long.
- * @param {string} value -The new password of the user trying to register.
- */
+   * Checks if the password the user typed is valid or not.
+   * The password must be 6 characters long.
+   * @param {string} value -The new password of the user trying to register.
+   */
   const validatePassword = (value) => {
     let PasswordState;
     if (value.length > 5) {
@@ -189,9 +188,9 @@ export default function Register() {
   };
 
   /**
-* Confirms the new password of the user.
-* @param {string} value -The confirmed new password of the user trying to register.
-*/
+   * Confirms the new password of the user.
+   * @param {string} value -The confirmed new password of the user trying to register.
+   */
 
   const validateConfirmPassword = (value) => {
     let confirmPasswordState;
@@ -203,47 +202,31 @@ export default function Register() {
     setConfirmPasswordState(confirmPasswordState);
   };
 
-
-
   const handleChange = (event) => {
     const { name, value } = event.target;
 
     if (name === "firstName") {
       validateFirstName(value);
       setFirstName(value);
-    }
-
-    else if (name === "lastName") {
+    } else if (name === "lastName") {
       validateLastName(value);
       setLastName(value);
-    }
-
-    else if (name === "userId") {
+    } else if (name === "userId") {
       validateUserId(value);
       setUserId(value);
-    }
-
-    else if (name === "email") {
+    } else if (name === "email") {
       validateEmail(value);
       setEmail(value);
-    }
-
-    else if (name === "password") {
+    } else if (name === "password") {
       validatePassword(value);
       setPassword(value);
-    }
-
-    else if (name === "confirm_password") {
+    } else if (name === "confirm_password") {
       validateConfirmPassword(value);
       setConfirmPassword(value);
-
-    }
-
-    else {
+    } else {
       validatePhone(value);
       SetPhone(value);
     }
-
   };
 
   const handleSubmit = (event) => {
@@ -257,7 +240,6 @@ export default function Register() {
     validateConfirmPassword(confirmPassword);
     validatePhone(phone);
 
-
     if (
       firstNameState === "has-success" &&
       lastNameState === "has-success" &&
@@ -268,27 +250,29 @@ export default function Register() {
       phoneState === "has-success"
     ) {
       // Call User Register Adapter
-      useRegisterMutation.mutate(
-        {
-          "firstName": firstName,
-          "lastName": lastName,
-          "userId": Number(userId),
-          "email": email,
-          "password": password,
-          "phone": phone
-        }
-      );
+      useRegisterMutation.mutate({
+        firstName: firstName,
+        lastName: lastName,
+        userId: Number(userId),
+        email: email,
+        password: password,
+        phone: phone,
+      });
     }
   };
 
   return (
     <div className={styles.App}>
-      <Button color="outline-primary" onClick={() => {
-        window.location.replace("http://localhost:3000");
-      }} >Return to Sign in</Button>
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000");
+        }}
+      >
+        Return to Sign in
+      </Button>
       <h2>Register</h2>
       <Form className={styles.form} onSubmit={handleSubmit}>
-
         <FormGroup>
           <Label className={styles.label} for="firstName">
             First Name:
@@ -305,7 +289,6 @@ export default function Register() {
           <FormFeedback>Please don't leave it empty</FormFeedback>
         </FormGroup>
 
-
         <FormGroup>
           <Label className={styles.label} for="lastName">
             Last Name:
@@ -320,7 +303,6 @@ export default function Register() {
             invalid={lastNameState === "has-danger"}
           />
           <FormFeedback>Please don't leave it empty</FormFeedback>
-
         </FormGroup>
 
         <FormGroup>
@@ -336,9 +318,9 @@ export default function Register() {
             valid={userIdState === "has-success"}
             invalid={userIdState === "has-danger"}
           />
-          <FormFeedback>ID is incorrect or has been registered with before.</FormFeedback>
-
-
+          <FormFeedback>
+            ID is incorrect or has been registered with before.
+          </FormFeedback>
         </FormGroup>
 
         <FormGroup>

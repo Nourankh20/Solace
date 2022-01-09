@@ -1,124 +1,156 @@
-import React from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import React from "react";
+import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
 
 export default function ExternalTransfer() {
+  const [AccountID, setAccountID] = useState("");
+  const [Amount, setAmount] = useState("");
+  const [Bank, setBank] = useState("");
+  const [Description, setDescription] = useState("");
 
-    const [AccountID, setAccountID] = useState("");
-    const [Amount, setAmount] = useState("");
-    const [Bank, setBank] = useState("");
-    const [Description, setDescription] = useState("");
+  const [accountIDState, setAccountIDState] = useState("");
+  const [amountState, setAmountState] = useState("");
+  //const [Bank, setBank] = useState("");
+  const [descriptionState, setDescriptionState] = useState("");
 
-    const [accountIDState, setAccountIDState] = useState("");
-    const [amountState, setAmountState] = useState("");
-    //const [Bank, setBank] = useState("");
-    const [descriptionState, setDescriptionState] = useState("");
+  /**
+   * Checks if the Account ID entered by the user is valid or not.
+   * @param {string} value -The account ID of the reciever the user wants to send to.
+   */
 
-    /**
-     * Checks if the Account ID entered by the user is valid or not.
-     * @param {string} value -The account ID of the reciever the user wants to send to.
-     */
-
-     const validateAccountID = (value) => {
-        let accountIDState;
-        if (value.length > 0) {
-            accountIDState = "has-success";
-        }
-        else {
-            accountIDState = "has-danger";
-        }
-        setAccountIDState(accountIDState);
+  const validateAccountID = (value) => {
+    let accountIDState;
+    if (value.length > 0) {
+      accountIDState = "has-success";
+    } else {
+      accountIDState = "has-danger";
     }
+    setAccountIDState(accountIDState);
+  };
 
-    /**
-     * Checks if the Amount entered by the user is not more than 50 as the maximum transaction allowed is 50.
-     * @param {string} value -The amount of money the user wants to transfer.
-     */
+  /**
+   * Checks if the Amount entered by the user is not more than 50 as the maximum transaction allowed is 50.
+   * @param {string} value -The amount of money the user wants to transfer.
+   */
 
-      const validateAmount = (value) => {
-        const max = 50; 
-        let amountState; 
-        if (max <= value) {
-            amountState = "has-success"
-        }else {
-            amountState = "has-danger"
-        }
-        setAmountState(amountState)
-      }
+  const validateAmount = (value) => {
+    const max = 50;
+    let amountState;
+    if (max <= value) {
+      amountState = "has-success";
+    } else {
+      amountState = "has-danger";
+    }
+    setAmountState(amountState);
+  };
 
+  /**
+   * Checks if the Description entered by the user is valid or not.
+   * @param {string} value -The description of the transfer.
+   */
+  const validateDescription = (value) => {
+    let descriptionState;
+    if (value.length > 5) {
+      descriptionState = "has-success";
+    } else {
+      descriptionState = "has-danger";
+    }
+    setDescriptionState(descriptionState);
+  };
 
-    /**
-     * Checks if the Description entered by the user is valid or not.
-     * @param {string} value -The description of the transfer.
-     */
-      const validateDescription = (value) => {
-        let descriptionState;
-        if (value.length > 5) {
-            descriptionState = "has-success";
-        }
-        else {
-            descriptionState = "has-danger";
-        }
-        setDescriptionState(descriptionState);
-      }
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-      const handleChange = (event) => {
-        const { name, value } = event.target;
-        
-        if (name === "accountID") {
-          validateAccountID(value);
-          setAccountID(value);
-        }
-        
-        else if (name === "amount") {
-          validateAmount(value);
-          setAmount(value);
-        }
-    
-        else if (name === "description") {
-          validateDescription(value);
-          setDescription(value);
-        }
+    if (name === "accountID") {
+      validateAccountID(value);
+      setAccountID(value);
+    } else if (name === "amount") {
+      validateAmount(value);
+      setAmount(value);
+    } else if (name === "description") {
+      validateDescription(value);
+      setDescription(value);
+    } else if (name === "bankSelect") {
+      setBank(value);
+    }
+  };
 
-        else if (name === "bankSelect") {
-            setBank(value)
-        }
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-      };
+    validateAccountID(value);
+    validateAmount(value);
+    validateDescription(value);
 
-      const handleSubmit = (event) => {
-        event.preventDefault();
-    
-        validateAccountID(value);
-        validateAmount(value);
-        validateDescription(value);
-    
-        if (
-          accountIDState==="has-success"&&
-          amountState==="has-success"&&
-          descriptionState==="has-success"
-        ) {
-          
-        }
-      };
+    if (
+      accountIDState === "has-success" &&
+      amountState === "has-success" &&
+      descriptionState === "has-success"
+    ) {
+    }
+  };
 
+  return (
+    <div className={styles.app}>
+      <h1> External Funds Transfer </h1>
 
-    return (
-      <div className = {styles.app}>
-         <h1> External Funds Transfer  </h1>
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000");
+        }}
+      >
+        Return to Sign in
+      </Button>
+
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/");
+        }}
+      >
+        Return to Dashboard
+      </Button>
+
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/internal_transfer");
+        }}
+      >
+        Go to internal transfer
+      </Button>
+
       <Form className={styles.form} onSubmit={handleSubmit}>
-         <FormGroup>
+        <FormGroup>
           <Label for="exampleNumber">Receiver Account ID</Label>
-          <Input type="number" name="accountID" id="accountID" placeholder="id" onChange={handleChange}/>
+          <Input
+            type="number"
+            name="accountID"
+            id="accountID"
+            placeholder="id"
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label for="exampleNumber">Amount (EGP)</Label>
-          <Input type="number" name="amount" id="amount" placeholder="enter amount in EGP" onChange={handleChange} />
+          <Input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="enter amount in EGP"
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label for="exampleSelect">Select a bank</Label>
-          <Input type="select" name="bankSelect" id="bankSelect" onChange={handleChange}>
+          <Input
+            type="select"
+            name="bankSelect"
+            id="bankSelect"
+            onChange={handleChange}
+          >
             <option>Bank 1</option>
             <option>Bank 2</option>
             <option>Bank 3</option>
@@ -128,11 +160,17 @@ export default function ExternalTransfer() {
         </FormGroup>
         <FormGroup>
           <Label for="exampleText">Description</Label>
-          <Input type="textarea" name="description" id="description" placeholder="example: money transfer" onChange={handleChange}/>
+          <Input
+            type="textarea"
+            name="description"
+            id="description"
+            placeholder="example: money transfer"
+            onChange={handleChange}
+          />
         </FormGroup>
-       
+
         <Button>Submit</Button>
       </Form>
-      </div>
-    );
+    </div>
+  );
 }
