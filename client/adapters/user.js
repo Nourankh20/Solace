@@ -66,6 +66,9 @@ export function useMutateRegisterUser() {
     export function useMutateExternaltransfer() {
       return useMutation(transfer => {
       const data = new FormData();
+      const balance = apiService.get(`http://localhost:5000/accounts/user/balance/${localStorage.getItem(accountid)}`);
+      
+      }
       return axios.post(`http://localhost:5000/external/createtransfer`, transfer,{headers:{'Bypass-Tunnel-Reminder':any}});
     },
     {

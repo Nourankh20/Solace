@@ -4,7 +4,7 @@ import { Account, AccountDocument,Transaction,} from "@sp/schemas";
 import { Model } from "mongoose";
 import { TransactionService } from "../transaction/transaction.service";
 import { AccountService } from "../account/account.service";
-import { Response as Res, Request as Req } from "express";
+import { Response as Res, Request as Req, response } from "express";
 import { TransactionDto } from '../transaction/dto/transaction.dto';
 import { JwtService } from "@nestjs/jwt";
 // const JwtService = require("@nestjs/jwt")
@@ -23,26 +23,53 @@ export class ExternalService {
     private jwtService: JwtService
   ) {}
 
+  CreateEtoken(dto:ExternalDto , res:any):any {
 
+    const access_token = this.jwtService.sign(
+    {
+        receiverAccountNumber:dto.receiverAccountNumber,
+         amount:dto.amount ,
+         description:dto.description }, 
+    {secret:"My-Secret-Key",
+    expiresIn: "60s",
+  });
+  //console.log(access_token);
+  let response: object = { ...{receiverAccountNumber:dto.receiverAccountNumber, amount:dto.amount ,description:dto.description }, token: access_token };
+  res.json(response);
+  return res;
+} 
   async CreateExternal(request:any){
- const today = new Date();
- const tdto:TransactionDto = {
-  from_To:request.receiverAccountNumber,
-  accountid: request.accountid,
-  amount: request.amount,
-  credit:0,
-  debit:1,
-  Display_date:today.toDateString()
-  ,description:request.description
-};
- const newTransaction = await this.transactionService.createTransaction(tdto);
- const tdto2:TransactionDto = {
-     from_To:request.receiverAccountNumber,accountid: request.accountid,amount: 5,credit:0,debit:1,Display_date:today.toDateString(),description:request.description}
- const newTransaction2 = await this.transactionService.createTransaction(tdto2);
+  const balance = this.accountService.calculateBalance(request.accountid);
+  if(balance >= request.amount+5){
+    let req: ExternalDto = {receiverAccountNumber:request.receiverAccountNumber,amount:request.amount,description:request.description};
+    const token = await this.CreateEtoken(req,response);
+    axios.post(`http://${request.url}/external/createtransfer`, req,{headers:{'Authorization':`${token}`,'Bypass-Tunnel-Reminder':"any"}})
+    .then(async(response)=>{
+      if(response){
+      const today = new Date();
+      const tdto:TransactionDto = {
+       from_To:request.receiverAccountNumber,
+       accountid: request.accountid,
+       amount: request.amount,
+       credit:0,
+       debit:1,
+       Display_date:today.toDateString()
+       ,description:request.description
+     };
+      const newTransaction = await this.transactionService.createTransaction(tdto);
+      const tdto2:TransactionDto = {
+          from_To:request.receiverAccountNumber,accountid: request.accountid,amount: 5,credit:0,debit:1,Display_date:today.toDateString(),description:request.description}
+      const newTransaction2 = await this.transactionService.createTransaction(tdto2);
+      }
+    });
+
+ 
       
 
  
-}
+
+    }  
+  }
 
 
     async createTransfer(dto: ExternalDto ){
