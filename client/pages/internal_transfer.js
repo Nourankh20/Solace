@@ -3,14 +3,19 @@ accountid
 amount 
 description
 */
-
+import {
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+} from "reactstrap";
 import React, { useEffect, useState } from "react";
-import { Label } from "reactstrap";
 import apiService from "../services/apiService";
-import Table from "react-bootstrap/Table";
-import Logout from "../components/Logout";
 import styles from "../styles/Home.module.css";
-import { Form, FormGroup, Button } from "reactstrap";
+import { useMutateTransferUser } from "../adapters/user";
+import axios from "axios";
 
 export default function InternalTransfer() {
   //properties
@@ -27,17 +32,21 @@ export default function InternalTransfer() {
   const useTransferMutation = useMutateTransferUser();
   const defaultrecieverAccountid = 12345678910;
 
-  const validateAccountId = (value) => {
+  const validateAccountId = async (value) => {
     //Call a get request to check account is valid
 
     let recieverAccountidState;
 
-    const account =  axios.get(
-      `http://localhost:5000/reciever/account/${value}`
-    );
-    if (account && account.toString().length == 12) {
-      recieverAccountidState = "has-success";
-      setAccount(account.data);
+
+    if (value.length === 12) {
+      // const account = await axios.get(
+      //   `http://localhost:5000/reciever/account/${value}`
+      // );
+      // if(account){
+        recieverAccountidState = "has-success";
+      //  setAccount(account.data);
+      //}
+      
     } else {
       recieverAccountidState = "has-danger";
     }
@@ -46,7 +55,7 @@ export default function InternalTransfer() {
 
   const validateDescriptionState = (value) => {
     let descriptionState;
-    if (value == true) {
+    if (Object.keys(value).length >= 2) {
       descriptionState = "has-success";
     } else {
       descriptionState = "has-danger";
@@ -55,12 +64,12 @@ export default function InternalTransfer() {
   };
 
   /* if isNan() to  check its a number */
-  const validateAmountState = (value) => {
+  const validateAmountState = async (value) => {
     let amountState;
-    const balance =  apiService.get(
-      `http://localhost:5000/accounts/user/balance/${account.data.id}`
-    );
-    if (!value.isNan(value) && value <= balance) {
+    // const balance = await apiService.get(
+    //   `http://localhost:5000/accounts/user/balance/${account.data.id}`
+    // );
+    if (value > 0) {
       amountState = "has-success";
     } else {
       amountState = "has-danger";
@@ -71,34 +80,34 @@ export default function InternalTransfer() {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    if (recieverAccountid === "recieverAccountid") {
+    if (name === "accountid") {
       validateAccountId(value);
       setrecieverAccountid(value);
     } else if (name === "amount") {
       validateAmountState(value);
-      setAmountState(value);
+      setAmount(value);
     } else if (name === "description") {
       validateDescriptionState(value);
-      setDescriptionState(value);
+      setDescription(value);
     }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    validateAccountId();
-    validateAmountState();
-    validateDescriptionState();
+    validateAccountId(recieverAccountid);
+    validateAmountState(amount);
+    validateDescriptionState(description);
 
-    if (accountIdState === "has-success" && amountState === "has-success") {
+    if (recieverAccountidState === "has-success" && amountState === "has-success" && descriptionState === "has-success") {
       // Call User Transfer Adapter
       useTransferMutation.mutate({
-        from_To: recieverAccountid,
-        Display_date: new Date().toDateString(),
-        description: "internal transfer",
-        debit: 1,
-        credit: 0,
-        amount: Number(amount),
-        accountid: window.localStorage.getItem("accountid"),
+        "from_To": recieverAccountid,
+        "Display_date": new Date().toDateString(),
+        "description": description,
+        "debit": 1,
+        "credit": 0,
+        "amount": Number(amount),
+        "accountid": window.localStorage.getItem("accountid"),
       });
     }
   };
@@ -136,13 +145,13 @@ export default function InternalTransfer() {
             Account id:
           </Label>
           <Input
-            type="Numer"
-            name="account id"
+            type="Number"
+            name="accountid"
             id="accountid"
             placeholder="Enter account id (12 numbers)"
             onChange={handleChange}
-            valid={accountIdState === "has-success"}
-            invalid={accountIdState === "has-danger"}
+            valid={recieverAccountidState === "has-success"}
+            invalid={recieverAccountidState === "has-danger"}
           />
           <FormFeedback>Account id not found.</FormFeedback>
         </FormGroup>
