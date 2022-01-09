@@ -1,11 +1,15 @@
-import React from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import React from "react";
+import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
 import { useMutateExternalTransfer } from "../adapters/user";
 
 
 export default function ExternalTransfer() {
+  const [AccountID, setAccountID] = useState("");
+  const [Amount, setAmount] = useState("");
+  const [Bank, setBank] = useState("");
+  const [Description, setDescription] = useState("");
 
     const [AccountID, setAccountID] = useState("");
     const [Amount, setAmount] = useState("");
@@ -34,6 +38,53 @@ export default function ExternalTransfer() {
         }
         setAccountIDState(accountIDState);
     }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    validateAccountID(value);
+    validateAmount(value);
+    validateDescription(value);
+
+    if (
+      accountIDState === "has-success" &&
+      amountState === "has-success" &&
+      descriptionState === "has-success"
+    ) {
+    }
+  };
+
+  return (
+    <div className={styles.app}>
+      <h1> External Funds Transfer </h1>
+
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000");
+        }}
+      >
+        Return to Sign in
+      </Button>
+
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/");
+        }}
+      >
+        Return to Dashboard
+      </Button>
+
+      <Button
+        color="outline-primary"
+        onClick={() => {
+          window.location.replace("http://localhost:3000/internal_transfer");
+        }}
+      >
+        Go to internal transfer
+      </Button>
 
     /**
      * Checks if the Amount entered by the user is not more than 50 as the maximum transaction allowed is 50.
@@ -123,13 +174,25 @@ export default function ExternalTransfer() {
       <div className = {styles.app}>
          <h1> External Funds Transfer  </h1>
       <Form className={styles.form} onSubmit={handleSubmit}>
-         <FormGroup>
+        <FormGroup>
           <Label for="exampleNumber">Receiver Account ID</Label>
-          <Input type="number" name="accountID" id="accountID" placeholder="id" onChange={handleChange}/>
+          <Input
+            type="number"
+            name="accountID"
+            id="accountID"
+            placeholder="id"
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label for="exampleNumber">Amount (EGP)</Label>
-          <Input type="number" name="amount" id="amount" placeholder="enter amount in EGP" onChange={handleChange} />
+          <Input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="enter amount in EGP"
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label for="exampleSelect">Select a bank</Label>
@@ -143,11 +206,17 @@ export default function ExternalTransfer() {
         </FormGroup>
         <FormGroup>
           <Label for="exampleText">Description</Label>
-          <Input type="textarea" name="description" id="description" placeholder="example: money transfer" onChange={handleChange}/>
+          <Input
+            type="textarea"
+            name="description"
+            id="description"
+            placeholder="example: money transfer"
+            onChange={handleChange}
+          />
         </FormGroup>
-       
+
         <Button>Submit</Button>
       </Form>
-      </div>
-    );
+    </div>
+  );
 }
