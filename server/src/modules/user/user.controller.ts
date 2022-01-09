@@ -32,8 +32,15 @@ export class UserController {
    */ 
   
   @Post('/register')
-  register(@Body() dto:UserDto):any{
+    async register(@Body() dto:UserDto):Promise<any>{
     console.log('Entered post');
+      const id_exists=(await this.userService.findUserbyId(dto.userId.toString()))!=null?true:false;
+      const email_exists=(await this.userService.findUserbyEmail(dto.email))!=null?true:false;
+
+      if(id_exists||email_exists){
+        throw 500;
+      }
+
       return this.userService.createUser(dto);
       
   }
@@ -44,9 +51,21 @@ export class UserController {
    * @return user object
    */ 
   
-  @Get(':userId')
-  exists(@Param('userId') userId: string):any{
-    return this.userService.findUserbyId(userId);
+  @Get('idExists/:userId')
+  async idExists(@Param('userId') userId: string):Promise<any>{
+    return await this.userService.findUserbyId(userId);
   }
+
+  /**
+   * API endpoint handler for getting the user
+   * @param userEmail the email of the user to check
+   * @return user object
+   */
+  @Get('emailExists/:email')
+  async emailExists(@Param('email') userEmail: string):Promise<any>{
+    return this.userService.findUserbyEmail(userEmail);
+  }
+
+  
   
 }

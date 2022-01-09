@@ -46,9 +46,9 @@ export  function useFetchUser(userId) {
  */
 
 export function useMutateRegisterUser() {
-      return useMutation(user => {
+      return useMutation(async user => {
       const data = new FormData();
-      return apiService.post(`http://localhost:5000/user/register`, user);
+      return await apiService.post(`http://localhost:5000/user/register`, user);
     },
     {
       // When mutate is called:
@@ -56,8 +56,12 @@ export function useMutateRegisterUser() {
         // Redirect to login page------------>
         window.location.replace("http://localhost:3000")
       },
-      onError: (e) => console.log(e.message),
+      onError: (e) => {console.log(e.message); alert('you have registsred with this id or email before'); },
+      
+      
+      
     });
+  }
     
     export function useMutateExternaltransfer() {
       return useMutation(transfer => {
@@ -73,5 +77,4 @@ export function useMutateRegisterUser() {
       onError: (e) =>alert(e.message),
     });
   
-}
 }

@@ -29,9 +29,9 @@ export default function Register() {
   const [emailState, setEmailState] = useState("");
   const [passwordState, setPasswordState] = useState("");
   const [confirmPasswordState, setConfirmPasswordState] = useState("");
-  const [userIds, setIds] = useState([]);
+  /*const [userIds, setIds] = useState([]);
   const [userEmails, setEmails] = useState([]);
-  const [userPhones, setUserPhones] = useState([]);
+  const [userPhones, setUserPhones] = useState([]);*/
 
   const useRegisterMutation = useMutateRegisterUser();
   const defaultId = "100";
@@ -41,7 +41,7 @@ export default function Register() {
     setUserId(defaultId);
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     axios.get(`http://localhost:5000/user/list`).then((myUser) => {
       setUseFetch(myUser.data);
 
@@ -68,8 +68,10 @@ export default function Register() {
       }, []);
 
       setEmails(emails);
-    });
-  }, [userId]);
+
+    })
+  }, [userId])*/
+
 
   /**
    * Checks if the first name the user typed is valid or not.
@@ -110,17 +112,26 @@ export default function Register() {
   const validateUserId = (value) => {
     let userIdState;
     //checks if this id is already registerd or not.
-    var prevId = userIds.filter((id) => {
-      return id === Number(value);
-    });
+    //var prevId = userIds.filter(id => { return id === Number(value) });
+    
+    if(value.length==7&&!isNaN(Number(value))){
+      userIdState = "has-success";
+    }
+    else {
+      userIdState = "has-danger";
+    }
+    setUserIdState(userIdState);
 
-    if (value.length == 7 && !isNaN(Number(value)) && prevId.length === 0) {
+    
+
+    /*if (value.length == 7 && !isNaN(Number(value)&&!id_exists) && prevId.length === 0) {
       userIdState = "has-success";
     } else {
       userIdState = "has-danger";
     }
-    setUserIdState(userIdState);
-  };
+    setUserIdState(userIdState);*/
+
+  }
 
   /**
    * Checks if the Phone no. the user typed is valid or not.
@@ -132,15 +143,7 @@ export default function Register() {
     let phoneState;
     if (value.length >= 3) {
       const prefix = value.substring(0, 3);
-      if (
-        value.length == 11 &&
-        !isNaN(Number(value)) &&
-        (prefix === "010" ||
-          prefix === "011" ||
-          prefix === "012" ||
-          prefix === "015") &&
-        !userPhones.find((phone) => phone === value)
-      ) {
+      if (value.length == 11 && !isNaN(Number(value)) && (prefix === "010" || prefix === "011" || prefix === "012" || prefix === "015")/* && !userPhones.find(phone => phone === value)*/) {
         phoneState = "has-success";
       } else {
         phoneState = "has-danger";
@@ -155,22 +158,21 @@ export default function Register() {
    * Checks if the email the user typed is valid or not.
    * @param {string} value -The giu email of the user trying to register.
    */
-  const validateEmail = (value) => {
+  const validateEmail = async (value) => {
     const emailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     let emailState;
     //checks if this email is already registerd or not.
-    if (
-      emailRegex.test(value) &&
-      !userEmails.find((email) => email === value)
-    ) {
+    
+
+    if (emailRegex.test(value) /*!userEmails.find(email => email === value)*/) {
       emailState = "has-success";
     } else {
       emailState = "has-danger";
     }
     setEmailState(emailState);
-  };
+  }
 
   /**
    * Checks if the password the user typed is valid or not.

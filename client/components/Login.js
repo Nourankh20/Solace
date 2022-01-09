@@ -15,6 +15,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailState, setEmailState] = useState("");
+  const [passwordState, setPasswordState] = useState("");
   const useLoginMutations = useMutateLoginUser();
 
 
@@ -35,6 +36,18 @@ export default function Login() {
     setEmailState(emailState);
   };
 
+  const validatePassword = (value) => {
+    let passwordState;
+    if(password.length>0){
+      passwordState = "has-success";
+    } else {
+      passwordState = "has-danger";
+    }
+
+    setPasswordState(passwordState)
+
+  }
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "email") {
@@ -42,16 +55,27 @@ export default function Login() {
       validateEmail(value);
     } else {
       setPassword(value);
+      validatePassword(value);
     }
   };
 
   const handleSubmit = (event) => {
-    // Call User Login Adapter
     event.preventDefault();
-    useLoginMutations.mutate({
-      "email": email,
-      "password": password
-    });
+
+    validateEmail(email);
+    validatePassword(password);
+
+    if(emailState === "has-success" &&
+    passwordState === "has-success"){
+
+      // Call User Login Adapter
+      useLoginMutations.mutate({
+        "email": email,
+        "password": password
+      });
+
+    }
+
 
   };
   return (
@@ -83,6 +107,8 @@ export default function Login() {
             id="password"
             placeholder="********"
             onChange={handleChange}
+            valid={passwordState === "has-success"}
+            invalid={passwordState === "has-danger"}
           />
         </FormGroup>
         <Button color="primary" onClick={handleSubmit}>Submit</Button>
