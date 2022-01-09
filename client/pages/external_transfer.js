@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
+import { useMutateExternalTransfer } from "../adapters/user";
+
 
 export default function ExternalTransfer() {
 
@@ -9,6 +11,8 @@ export default function ExternalTransfer() {
     const [Amount, setAmount] = useState("");
     const [Bank, setBank] = useState("");
     const [Description, setDescription] = useState("");
+    const [URL, setURL] = useState("");
+    const useExternalMutation = useMutateExternalTransfer();
 
     const [accountIDState, setAccountIDState] = useState("");
     const [amountState, setAmountState] = useState("");
@@ -87,9 +91,10 @@ export default function ExternalTransfer() {
 
       };
 
+
       const handleSubmit = (event) => {
         event.preventDefault();
-    
+
         validateAccountID(value);
         validateAmount(value);
         validateDescription(value);
@@ -99,7 +104,17 @@ export default function ExternalTransfer() {
           amountState==="has-success"&&
           descriptionState==="has-success"
         ) {
-          
+
+          // Call User Register Adapter
+          useExternalMutation.mutate(
+            {
+              "accountid": localStorage.getItem("accountid"),
+              "receiverAccountNumber": AccountID,
+              "url": URL,
+              "amount": Amount,
+              "description": Description,
+            }
+          );
         }
       };
 
@@ -119,8 +134,8 @@ export default function ExternalTransfer() {
         <FormGroup>
           <Label for="exampleSelect">Select a bank</Label>
           <Input type="select" name="bankSelect" id="bankSelect" onChange={handleChange}>
-            <option>Bank 1</option>
-            <option>Bank 2</option>
+            <option onClick={setURL(`https://safemonii.loca.lt/`)}> Safemonii </option>
+            <option onClick={setURL(`https://ironbank.loca.lt/`)}> ironbank </option>
             <option>Bank 3</option>
             <option>Bank 4</option>
             <option>Bank 5</option>

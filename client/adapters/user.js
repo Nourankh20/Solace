@@ -58,8 +58,20 @@ export function useMutateRegisterUser() {
       },
       onError: (e) => console.log(e.message),
     });
-
-
     
+    export function useMutateExternaltransfer() {
+      return useMutation(transfer => {
+      const data = new FormData();
+      return axios.post(`http://localhost:5000/external/createtransfer`, transfer,{headers:{'Bypass-Tunnel-Reminder':any}});
+    },
+    {
+      // When mutate is called:
+      onSuccess: (responseData) => {
+        // Redirect to login page------------>
+        alert("successful transfer")
+      },
+      onError: (e) =>alert(e.message),
+    });
   
+}
 }
