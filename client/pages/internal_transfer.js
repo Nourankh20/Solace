@@ -30,23 +30,33 @@ export default function InternalTransfer() {
   const [descriptionState, setDescriptionState] = useState("");
 
   const useTransferMutation = useMutateTransferUser();
-  const defaultrecieverAccountid = 12345678910;
+
+  useEffect(async () => {
+    console.log("Mounting!");
+    const accountId = localStorage.getItem("accountid");
+    setAccountID(accountId.toString());
+    console.log(accountId.toString());
+  }, []);
 
   const validateAccountId = async (value) => {
     //Call a get request to check account is valid
 
     let recieverAccountidState;
 
-
     if (value.length === 12) {
-      // const account = await axios.get(
-      //   `http://localhost:5000/reciever/account/${value}`
-      // );
-      // if(account){
-        recieverAccountidState = "has-success";
-      //  setAccount(account.data);
-      //}
-      
+      await axios
+        .get(`http://localhost:5000/accounts/reciever/account/${value}`)
+        .then((account) => {
+          if (account) {
+            recieverAccountidState = "has-success";
+          } else {
+            console.log("No found");
+            recieverAccountidState = "has-danger";
+          }
+        })
+        .catch((error) => {
+          alert("Account doesn't exist");
+        });
     } else {
       recieverAccountidState = "has-danger";
     }
@@ -65,11 +75,10 @@ export default function InternalTransfer() {
 
   /* if isNan() to  check its a number */
   const validateAmountState = async (value) => {
-    let amountState;
-    // const balance = await apiService.get(
-    //   `http://localhost:5000/accounts/user/balance/${account.data.id}`
-    // );
-    if (value > 0) {
+    const balance = await apiService.get(
+      `http://localhost:5000/accounts/user/balance/${accountId}`
+    );
+    if (value > 0 && balance > value) {
       amountState = "has-success";
     } else {
       amountState = "has-danger";
