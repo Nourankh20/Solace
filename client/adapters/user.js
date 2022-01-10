@@ -57,11 +57,12 @@ export function useMutateRegisterUser() {
         window.location.replace("http://localhost:3000")
       },
       onError: (e) => { console.log(e.message); alert('you have registsred with this id or email before'); },
-
-
-
     });
 }
+/**
+ * Adds the new transfer 
+ * @returns {useMutation} Axios Response that add the transfer to the DB.
+ */
 export function useMutateTransferUser() {
   return useMutation(async transactions => {
     const data = new FormData();
@@ -70,7 +71,7 @@ export function useMutateTransferUser() {
     {
       // When mutate is called:
       onSuccess: (responseData) => {
-        // Redirect to login page------------>
+        // informs user that transfer  is completed  
         alert('Transfer completed Sucessfully ');
       },
       onError: (e) => { alert("Invalid request"); }
