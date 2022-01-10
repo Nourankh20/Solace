@@ -1,5 +1,4 @@
 import { Controller, Get, Request, UseGuards,Post, Body,Param } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { UserDto } from './dtos/user.dto';
 import { UserService } from './user.service';
 
@@ -10,7 +9,7 @@ export class UserController {
   /**
    * API endpoint handler returns the authenticated user from JWT payload
    */
-  //@UseGuards(AuthGuard('jwt'))
+  
   @Get()
   user(@Request() req: any): any {
     return req.user;
@@ -38,32 +37,11 @@ export class UserController {
       const email_exists=(await this.userService.findUserbyEmail(dto.email))!=null?true:false;
 
       if(id_exists||email_exists){
-        throw 500;
+        throw 400;
       }
 
       return this.userService.createUser(dto);
       
-  }
-
-   /**
-   * API endpoint handler for getting the user
-   * @param userId the id of the user to check
-   * @return user object
-   */ 
-  
-  @Get('idExists/:userId')
-  async idExists(@Param('userId') userId: string):Promise<any>{
-    return await this.userService.findUserbyId(userId);
-  }
-
-  /**
-   * API endpoint handler for getting the user
-   * @param userEmail the email of the user to check
-   * @return user object
-   */
-  @Get('emailExists/:email')
-  async emailExists(@Param('email') userEmail: string):Promise<any>{
-    return this.userService.findUserbyEmail(userEmail);
   }
 
   

@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post,UseGuards} from "@nestjs/common";
 import { AccountService } from "./account.service";
-import { AuthGuard } from '@nestjs/passport';
+
 
 
 @Controller("accounts")
@@ -22,7 +22,7 @@ export class AccountController {
    * @param userid the id of the user that is retrieving the accounts that belongs to them
    * @return array of accounts that have the userid required
    */
-  //@UseGuards(AuthGuard('jwt'))
+  
   @Get(":userid")
   GetAccount(@Param("userid") userid: string): any {
     return this.accountService.findAccounts(userid);
@@ -47,7 +47,7 @@ export class AccountController {
    * @return balance
    */ 
 
-  //@UseGuards(AuthGuard('jwt'))
+  
   @Get("user/balance/:accountid")
   getAccountBalance(@Param("accountid") accountid: any) :any{
     const balance=this.accountService.calculateBalance(accountid);

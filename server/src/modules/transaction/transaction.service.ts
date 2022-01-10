@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Transaction,TransactionDocument } from '@sp/schemas';
 import { Model, ObjectId } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
-import axios from 'axios';
+
 
 @Injectable()
 export class TransactionService {
@@ -13,12 +13,11 @@ export class TransactionService {
   constructor(@InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>) {}
 
 
-  //useGaurd
    async getTrancation(accountid:string): Promise<Transaction[]> {
     return await this.transactionModel.find({accountid:accountid}).exec();
    }
 
-
+  
   async getAll():Promise<any>{
     return await this.transactionModel.find().exec(); 
    }
