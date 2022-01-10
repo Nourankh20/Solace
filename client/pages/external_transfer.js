@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, FormText , FormFeedback } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, FormText , FormFeedback, View, ButtonGroup } from "reactstrap";
 import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useMutateExternaltransfer } from "../adapters/user";
@@ -60,6 +60,15 @@ export default function ExternalTransfer() {
         setAmountState(amountState)
       }
 
+      const validateURL = (value)=>{
+        let urlState;
+        if (value.length>0 && value !== "default") {
+          urlState = "has-success"
+      }else {
+          urlState = "has-danger"
+      }
+      setURLState(urlState);
+      }
 
 
     /**
@@ -94,7 +103,10 @@ export default function ExternalTransfer() {
           validateDescription(value);
           setDescription(value);
         }
-      
+        else if (name === "bankSelect"){
+          validateURL(value);
+          setURL(value);
+        }
 
        
 
@@ -107,12 +119,13 @@ export default function ExternalTransfer() {
         validateAccountID(AccountID);
         validateAmount(Amount);
         validateDescription(Description);
-        // validateURL(URL);
+        validateURL(URL);
 
         if (
           accountIDState==="has-success"&&
           amountState==="has-success"&&
-          descriptionState==="has-success" 
+          descriptionState==="has-success" &&
+          URLState ==="has-success"
         ) {
 
           // Call User Register Adapter
@@ -120,7 +133,7 @@ export default function ExternalTransfer() {
             {
               "accountid":AccountIDMine,
               "receiverAccountNumber": AccountID,
-              "url": "https://safemonii.loca.lt",
+              "url": URL,
               "amount": Amount,
               "description": Description,
             }
@@ -132,34 +145,23 @@ export default function ExternalTransfer() {
     return ( 
    
       <div className={styles.App}>
-      <Button
-        class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000");
-        }}
-      >
-        Return to Sign in
-      </Button>
+        
+          <Button class="btn btn-info" color = "success" onClick={() => { window.location.replace("http://localhost:3000");}}>
+              Return to Sign in
+          </Button>
+          &nbsp;&nbsp;&nbsp;
+          
+          <Button class="btn btn-info" color = "success" onClick={() => { window.location.replace("http://localhost:3000/");}}>
+            Return to Dashboard
+          </Button>
+          &nbsp;&nbsp;&nbsp;
+        
+          <Button class="btn btn-info" onClick={() => { window.location.replace("http://localhost:3000/internal_transfer");}}>
+            Go To Internal Transfer
+          </Button>
       
-      <Button class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/");
-        }}
-      >
-        Return to Dashboard
-      </Button>
-     
-      <Button
-        class="btn btn-info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/internal_transfer");
-        }}
-      >
-        Go to internal transfer
-      </Button>
 
-     
-         <h1> External Funds Transfer  </h1>
+      <h1> External Funds Transfer  </h1>
       <Form className={styles.form} onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="accountID">Receiver Account ID</Label>
@@ -174,6 +176,7 @@ export default function ExternalTransfer() {
           />
           <FormFeedback>Account id not found.</FormFeedback>
         </FormGroup>
+
         <FormGroup>
           <Label for="amount">Amount (EGP)</Label>
           <Input
@@ -187,17 +190,19 @@ export default function ExternalTransfer() {
           />
           <FormFeedback>Invalid amount hint: It needs to be less than 50.</FormFeedback>
         </FormGroup>
+
         <FormGroup>
-          <Label for="bankSelect">Select a bank</Label>
-          <Input type="select" name="bankSelect" id="bankSelect" onChange={handleChange}>
-            <option onClick={ () => {setURL("default")}}> Please Pick A bank </option>
-            <option onClick={ () => {setURL("https://safemonii.loca.lt"); URL="https://safemonii.loca.lt" }}> Safemonii </option>
-            <option onClick={ () => {setURL("https://ironbank.loca.lt")}}> ironbank </option>
-            <option onClick={ () => {setURL("https://myfsd.loca.It")}}>My Fsd</option>
-            <option onClick={ () => {setURL("https://amryinternationalbank.loca.lt")}}>Amry International Bank</option>
-            <option onClick={ () => {setURL("https://luckbank.loca.lt")}}>Luck Bank</option>
-          </Input>
+        <Label for="bankSelect">Select a bank</Label>
+            <select defaultValue="Choose Bank" onChange={(event) =>setURL(event.target.value)}>
+                <option value = "default"> Please Pick A bank </option>
+                <option value = "https://safemonii.loca.lt/"> Safemonii </option>
+                <option value = "https://ironbank.loca.lt/"> Ironbank </option>
+                <option value = "https://myfsd.loca.it/"> My Fsd </option>
+                <option value = "https://amryinternationalbank.loca.lt/"> Amry International Bank </option>
+                <option value = "https://luckbank.loca.lt/" > Luck Bank </option>
+            </select>
         </FormGroup>
+
         <FormGroup>
           <Label for="description">Description</Label>
           <Input
@@ -212,10 +217,11 @@ export default function ExternalTransfer() {
           <FormFeedback>Please don't leave it empty.</FormFeedback>
         </FormGroup>
 
-        <Button>Submit</Button>
+           <Button color = "primary"> Submit</Button>
+
       </Form>
     </div>
-   
+  
   );
       
   };
