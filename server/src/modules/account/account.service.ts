@@ -41,8 +41,8 @@ export class AccountService {
    */
   
   createAccount(userid: string): Promise<Account> {
-    const newId = (Math.floor(Math.random() * 50) + 1).toString();
-    const newId2 = (Math.floor(Math.random() * 17) + 1).toString();
+    const newId = (Math.floor(Math.random() * (999-100)) + 100).toString();
+    const newId2 = (Math.floor(Math.random() * (99 - 10)) + 10).toString();
     const createdAccount = new this.accountModel({
       userid: userid,
       status: "active",
