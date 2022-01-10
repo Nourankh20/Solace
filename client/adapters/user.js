@@ -1,6 +1,6 @@
 import apiService from "../services/apiService";
 import { useQuery, useMutation } from "react-query";
-
+import axios from "axios";
 /**
  * Retrieves a user by ID
  * @param {string} userId - User's ID
@@ -73,7 +73,7 @@ export function useMutateTransferUser() {
         // Redirect to login page------------>
         alert('Transfer completed Sucessfully ');
       },
-      onError: (e) => { console.log(e.message); }
+      onError: (e) => { alert("Invalid request"); }
 
 
 
@@ -81,20 +81,12 @@ export function useMutateTransferUser() {
 }
 
 export function useMutateExternaltransfer() {
-  return useMutation(transfer => {
+  return useMutation( async transfer => {
     const data = new FormData();
-    const balance = apiService.get(`http://localhost:5000/accounts/user/balance/${localStorage.getItem(accountid)}`);
-
-
-    return axios.post(`http://localhost:5000/external/createtransfer`, transfer, { headers: { 'Bypass-Tunnel-Reminder': any } });
-  },
-    {
-      // When mutate is called:
-      onSuccess: (responseData) => {
-        // Redirect to login page------------>
-        alert("successful transfer")
-      },
-      onError: (e) => alert(e.message),
-    });
-
+    // const balance = apiService.get(`http://localhost:5000/accounts/user/balance/${localStorage.getItem(accountid)}`);
+    return await axios.post(`http://localhost:5000/external/createtransfer`, transfer, { headers: { 'Bypass-Tunnel-Reminder': "any" } })
+    .then( 
+      alert("successful transfer")
+).catch( (e) => alert(e.message));
+  });
 }

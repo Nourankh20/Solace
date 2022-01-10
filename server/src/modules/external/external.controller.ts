@@ -7,6 +7,7 @@ import { AccountService } from "../account/account.service";
 import { ConstraintMetadata } from "class-validator/types/metadata/ConstraintMetadata";
 import { TransactionDto } from "../transaction/dto/transaction.dto";
 import { response } from "express";
+import { RequestDto } from "./dtos/request.dto";
 
 @Controller("external")
 export class ExternalController {
@@ -26,9 +27,14 @@ export class ExternalController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Post("/CreateTransfer")
-      CreateExternal(@Body()request:any):any {
+    // @UseGuards(AuthGuard('jwt'))
+    @Post("/createTransfer")
+      CreateExternal(@Body()request:RequestDto):any {
+        try{
+            return this.externalService.CreateExternal(request);
+        } catch{
+            (err) => console.log(err.message);
+        }
     }
 }
 

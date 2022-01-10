@@ -14,6 +14,7 @@ import {
 export default function Dashboard() {
   const [Transactions, viewTransactions] = useState([]);
   const [balance, setBalance] = useState(" ");
+  const [accountid , setAccountID] = useState("");
 
   useEffect(async () => {
     console.log("Mounting!");
@@ -24,6 +25,7 @@ export default function Dashboard() {
 
     viewTransactions(response.data);
     calculateBalance(accountId);
+    setAccountID(accountId);
 
   }, []);
 
@@ -60,6 +62,7 @@ export default function Dashboard() {
       }}> Back </Button>
       <br></br>
       <h2 >Account Balance: {balance}$</h2>
+      <h2 >Account Id: {accountid}</h2>
       <Form className={styles.form}>
       <FormGroup >
       <Table striped bordered hover>
