@@ -1,0 +1,43 @@
+.App {
+  border: 2px solid #d3d3d3;
+  border-radius:2em;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+  padding: 1em;
+  text-align: left;
+  width: 600px; 
+  background-color:white;
+}
+
+
+.border{
+  border: 2px solid #d3d3d3;
+  border-radius: 2em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right:  auto;
+  margin-top: 100px;
+  padding: 5em;
+  text-align: left;
+  width: 1500px; 
+  background-color:white;
+}
+.form {
+  padding: 1em;
+ 
+}
+
+.table{
+  padding: 1em;
+  -moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+}
+.label {
+  font-weight: 600;
+  
+}
+
+
