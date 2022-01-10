@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards,Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards,Param, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TransactionService } from './transaction.service';
 import {TransactionDto} from './dto/transaction.dto'
@@ -52,7 +52,10 @@ getAll():any{
 
     if(!reciever_account_exists||Number(sender_balance)-sender_dto.amount<0||sender_dto.amount<0){
       console.log("Im here")
-      throw 500;
+       throw new HttpException(
+        "Invalid Request",
+        HttpStatus.BAD_REQUEST
+      );;
       }
       
     
