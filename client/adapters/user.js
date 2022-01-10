@@ -7,9 +7,9 @@ import { useQuery, useMutation } from "react-query";
  * @returns {User} User object
  */
 
-export  function useFetchUser(userId) {
+export function useFetchUser(userId) {
   return useQuery(["userData", userId], () =>
-  apiService.get(`user/${userId}`).then(({ data }) => data)
+    apiService.get(`user/${userId}`).then(({ data }) => data)
   );
 }
 
@@ -20,64 +20,81 @@ export  function useFetchUser(userId) {
  * @returns {useMutation} Axios Response that conatins the authinticated user.
  */
 
-  export function useMutateLoginUser() {
-    
-      return useMutation(user => {
-        return apiService.post(`http://localhost:5000/auth/login`, user);
-      },
-      {
-        // When mutate is called:
-        onSuccess: (responseData) => {   
-          //save the token and userData in localStorage 
-          localStorage.setItem("jwt", responseData.data.token);  
-          localStorage.setItem("user",JSON.stringify(responseData.data._doc));
-          window.location.replace("http://localhost:3000")
+export function useMutateLoginUser() {
 
-        },
-        onError: (e) => {alert('Invalid password or email')},
-      }
-    );
-    
-  }
-  
+  return useMutation(user => {
+    return apiService.post(`http://localhost:5000/auth/login`, user);
+  },
+    {
+      // When mutate is called:
+      onSuccess: (responseData) => {
+        //save the token and userData in localStorage 
+        localStorage.setItem("jwt", responseData.data.token);
+        localStorage.setItem("user", JSON.stringify(responseData.data._doc));
+        window.location.replace("http://localhost:3000")
+
+      },
+      onError: (e) => { alert('Invalid password or email') },
+    }
+  );
+
+}
+
 /**
  * Registers the new User and redirect him to the login page
  * @returns {useMutation} Axios Response that add the newely registerd user to the DB.
  */
 
 export function useMutateRegisterUser() {
-      return useMutation(async user => {
-      const data = new FormData();
-      return await apiService.post(`http://localhost:5000/user/register`, user);
-    },
+  return useMutation(async user => {
+    const data = new FormData();
+    return await apiService.post(`http://localhost:5000/user/register`, user);
+  },
     {
       // When mutate is called:
       onSuccess: (responseData) => {
         // Redirect to login page------------>
         window.location.replace("http://localhost:3000")
       },
-      onError: (e) => {console.log(e.message); alert('you have registsred with this id or email before'); },
-      
-      
-      
+      onError: (e) => { console.log(e.message); alert('you have registsred with this id or email before'); },
+
+
+
     });
-  }
-    
-    export function useMutateExternaltransfer() {
-      return useMutation(transfer => {
-      const data = new FormData();
-      const balance = apiService.get(`http://localhost:5000/accounts/user/balance/${localStorage.getItem(accountid)}`);
-      
-      }
-      return axios.post(`http://localhost:5000/external/createtransfer`, transfer,{headers:{'Bypass-Tunnel-Reminder':any}});
-    },
+}
+export function useMutateTransferUser() {
+  return useMutation(async transactions => {
+    const data = new FormData();
+    return await apiService.post(`http://localhost:5000/transactions/internaltransfer`, transactions);
+  },
+    {
+      // When mutate is called:
+      onSuccess: (responseData) => {
+        // Redirect to login page------------>
+        alert('Transfer completed Sucessfully ');
+      },
+      onError: (e) => { console.log(e.message); }
+
+
+
+    });
+}
+
+export function useMutateExternaltransfer() {
+  return useMutation(transfer => {
+    const data = new FormData();
+    const balance = apiService.get(`http://localhost:5000/accounts/user/balance/${localStorage.getItem(accountid)}`);
+
+
+    return axios.post(`http://localhost:5000/external/createtransfer`, transfer, { headers: { 'Bypass-Tunnel-Reminder': any } });
+  },
     {
       // When mutate is called:
       onSuccess: (responseData) => {
         // Redirect to login page------------>
         alert("successful transfer")
       },
-      onError: (e) =>alert(e.message),
+      onError: (e) => alert(e.message),
     });
-  
+
 }

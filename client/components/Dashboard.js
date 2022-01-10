@@ -30,23 +30,6 @@ export default function Dashboard() {
 
   return (
     <div className={styles.border}>
-      <Button
-        color="outline-primary"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/external_transfer");
-        }}
-      >
-        Go to external transfer
-      </Button>
-      <br></br>
-      <br></br>
-      <Button variant="info"
-        onClick={() => {
-          window.location.replace("http://localhost:3000/internal_transfer");
-        }}
-      >
-        Go to internal transfer
-      </Button>
       <Logout />
       <h1 >Accounts</h1>
       <Form className={styles.form}>
