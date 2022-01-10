@@ -19,18 +19,25 @@ import axios from "axios";
 
 export default function InternalTransfer() {
   //properties
+  /*
+  The useState function is a built in hook that can be imported from the react package. 
+  It allows you to add state to your functional components.
+   Using the useState hook inside a function component, 
+  you can create a piece of state without switching to class components. 
+  */
   const [recieverAccountid, setrecieverAccountid] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [account, setAccount] = useState("");
+  const [accountId, setAccountID] = useState("");
 
   //states
   const [recieverAccountidState, setrecieverAccountidState] = useState("");
   const [amountState, setAmountState] = useState("");
   const [descriptionState, setDescriptionState] = useState("");
 
+  // created in adapters user.js
   const useTransferMutation = useMutateTransferUser();
-
+  // hook  to tell React that your component needs to do something after render
   useEffect(async () => {
     console.log("Mounting!");
     const accountId = localStorage.getItem("accountid");
@@ -39,7 +46,7 @@ export default function InternalTransfer() {
   }, []);
 
   const validateAccountId = async (value) => {
-    //Call a get request to check account is valid
+    //Call a get request to check account is valid, checks reciever account id if its found or not 
 
     let recieverAccountidState;
 
@@ -50,7 +57,7 @@ export default function InternalTransfer() {
           if (account) {
             recieverAccountidState = "has-success";
           } else {
-            console.log("No found");
+            console.log("Not found");
             recieverAccountidState = "has-danger";
           }
         })
@@ -62,7 +69,7 @@ export default function InternalTransfer() {
     }
     setrecieverAccountidState(recieverAccountidState);
   };
-
+  // checks Description is acceptable or not (has more than 2 charachters)
   const validateDescriptionState = (value) => {
     let descriptionState;
     if (Object.keys(value).length >= 2) {
@@ -73,7 +80,9 @@ export default function InternalTransfer() {
     setDescriptionState(descriptionState);
   };
 
-  /* if isNan() to  check its a number */
+  /* checks amount that user wants to transfer is avavalibale in his credit side or not and is more than 0  
+  banks dont transfer with decimals 
+  */
   const validateAmountState = async (value) => {
     const balance = await apiService.get(
       `http://localhost:5000/accounts/user/balance/${accountId}`
@@ -85,7 +94,10 @@ export default function InternalTransfer() {
     }
     setAmountState(amountState);
   };
-
+  //regular function created to handle input change 
+  /*In that handleChange() function, 
+  you can call your update state function to update the state of your component according to the value from event.
+  */
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -100,7 +112,13 @@ export default function InternalTransfer() {
       setDescription(value);
     }
   };
-
+  /*
+    The handleSubmit() function does two things: it logs the current value of the input element whenever the form is submitted, 
+    and most importantly, it prevents the default HTML form behavior of browsing to a new page
+  for example here it submits there reciever acccount id to get Validated and simillary with amount & descryption 
+  then check if they all validated sucessfully it assign them  to their properties
+  
+  */
   const handleSubmit = (event) => {
     event.preventDefault();
     validateAccountId(recieverAccountid);
